@@ -4,21 +4,22 @@
 .btn {
     font-family: $font-default;
     font-weight: $weight-medium;
-    margin-bottom: 1rem;
+    margin-bottom: 0;
     padding: 0.8rem;
 }
 
 .btn1 {
-    border-radius: $radii-default;
+    border-radius: 0;
     background-color: $color-primary;
     color: $color-snow;
+    border: none;
 }
 
 .btn2 {
     @include hover;
     color: $color-primary;
     border: 0.0625rem solid $color-primary;
-    border-radius: $radii-default;
+    border-radius: 0;
     background-color: $color-snow;
     line-height: 1.2rem;
 
@@ -30,16 +31,18 @@
 
 .btn3 {
     @include hover;
-    margin-top: 1.6rem;
+    margin-top: 0;
     border: 0.0625rem solid $color-primary;
     background-color: $color-primary;
     color: $color-snow;
+    border-radius: 0;
 }
 
 .btn4 {
     @include hover;
     color: $color-primary;
     border: 0.0625rem solid $color-primary;
+    border-radius: 0;
 
     &:hover {
         background-color: $color-primary;
@@ -52,8 +55,8 @@
     box-shadow: rgba(0, 0, 0, 0.08) 0px 1px 4px;
     background-color: $color-secondary;
     color: $color-darkHigh;
-    border-radius: $radii-small;
-    margin-top: 0.6rem;
+    border-radius: 0;
+    margin-top: 0;
 
     &:hover {
         background-color: #3c91e6;

@@ -1,17 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ButtonComponent } from '../../components/form/button/button.component';
-import { InputComponent } from '../../components/form/input/input.component';
 
-// (CSS Modules import removido; Angular usa styleUrls para estilos do componente)
+import { ButtonComponent } from 'src/presentation/components/form/button/button.component';
+import { InputComponent } from 'src/presentation/components/form/input/input.component';
+import { PessoaService, Pessoa } from 'src/services/pessoa.service';
 
-type Pessoa = {
-  id: number;
-  cpf: string;
-  nome: string;
-  telefone: string;
-};
+import { Subscription } from 'rxjs';
 
 const onlyDigits = (value: string) => value.replace(/\D/g, '');
 
@@ -28,8 +23,9 @@ const isValidTelefoneLength = (value: string) => {
   templateUrl: './home.component.html',
   styleUrls: ['./home.module.scss'],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   pessoas: Pessoa[] = [];
+  private subscription = new Subscription();
 
   cpf = '';
   nome = '';
@@ -42,6 +38,8 @@ export class HomeComponent implements OnInit {
 
   error: string | null = null;
 
+  constructor(private pessoaService: PessoaService) { }
+
   // Máscara dinâmica para telefone (10 ou 11 dígitos)
   get phoneMask(): string {
     const len = onlyDigits(this.telefone).length;
@@ -53,39 +51,42 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    try {
-      const raw = localStorage.getItem('pessoas');
-      if (raw) this.pessoas = JSON.parse(raw);
-    } catch {}
+    // Carrega lista inicial do servidor JSON
+    this.subscription.add(
+      this.pessoaService.getAll().subscribe((pessoas) => {
+        this.pessoas = pessoas;
+      })
+    );
   }
 
-  private persist() {
-    try {
-      localStorage.setItem('pessoas', JSON.stringify(this.pessoas));
-    } catch {}
-  }
-
-  get nextId(): number {
-    return this.pessoas.length ? Math.max(...this.pessoas.map((p) => p.id)) + 1 : 1;
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   // Máscaras agora via ngx-mask no template; removidos handlers manuais
 
-  handleAdd(event: Event) {
-    event.preventDefault();
+  async handleAdd() {
+    this.error = null;
     if (!this.nome.trim()) { this.error = 'Nome é obrigatório.'; return; }
     if (!isValidCPFLength(this.cpf)) { this.error = 'CPF deve ter 11 dígitos.'; return; }
     if (!isValidTelefoneLength(this.telefone)) { this.error = 'Telefone deve ter 10 ou 11 dígitos.'; return; }
 
-    const novo: Pessoa = {
-      id: this.nextId,
-      cpf: this.cpf,
-      nome: this.nome.trim(),
-      telefone: this.telefone,
-    };
-    this.pessoas = [...this.pessoas, novo];
-    this.persist();
-    this.resetForm();
+    try {
+      this.subscription.add(
+        this.pessoaService.add({
+          cpf: this.cpf,
+          nome: this.nome.trim(),
+          telefone: this.telefone,
+        }).subscribe((created) => {
+          this.pessoas = [...this.pessoas, created];
+          this.resetForm();
+        }, () => {
+          this.error = 'Erro ao salvar dados. Tente novamente.';
+        })
+      );
+    } catch (error) {
+      this.error = 'Erro ao salvar dados. Tente novamente.';
+    }
   }
 
   startEdit(p: Pessoa) {
@@ -104,28 +105,40 @@ export class HomeComponent implements OnInit {
     this.error = null;
   }
 
-  saveEdit() {
+  async saveEdit() {
+    this.error = null;
     if (!this.editNome.trim()) { this.error = 'Nome é obrigatório.'; return; }
     if (!isValidCPFLength(this.editCpf)) { this.error = 'CPF deve ter 11 dígitos.'; return; }
     if (!isValidTelefoneLength(this.editTelefone)) { this.error = 'Telefone deve ter 10 ou 11 dígitos.'; return; }
 
-    this.pessoas = this.pessoas.map((p) =>
-      p.id === this.editingId
-        ? {
-            ...p,
-            cpf: this.editCpf,
-            nome: this.editNome.trim(),
-            telefone: this.editTelefone,
-          }
-        : p,
-    );
-    this.persist();
-    this.cancelEdit();
+    if (this.editingId === null) return;
+
+    try {
+      this.subscription.add(
+        this.pessoaService.update(this.editingId, {
+          cpf: this.editCpf,
+          nome: this.editNome.trim(),
+          telefone: this.editTelefone,
+        }).subscribe((updated) => {
+          this.pessoas = this.pessoas.map(p => p.id === this.editingId ? updated : p);
+          this.cancelEdit();
+        }, () => {
+          this.error = 'Erro ao atualizar dados. Tente novamente.';
+        })
+      );
+    } catch (error) {
+      this.error = 'Erro ao atualizar dados. Tente novamente.';
+    }
   }
 
-  remove(id: number) {
-    this.pessoas = this.pessoas.filter((p) => p.id !== id);
-    this.persist();
+  async remove(id: number) {
+    this.subscription.add(
+      this.pessoaService.remove(id).subscribe(() => {
+        this.pessoas = this.pessoas.filter(p => p.id !== id);
+      }, () => {
+        this.error = 'Erro ao remover dados. Tente novamente.';
+      })
+    );
   }
 
   private resetForm() {
