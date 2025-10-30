@@ -1,0 +1,14 @@
+<input
+  class="input"
+  [attr.id]="id"
+  [name]="name"
+  [attr.inputmode]="inputmode || null"
+  [attr.type]="type"
+  [placeholder]="placeholder"
+  [disabled]="disabled"
+  [value]="value"
+  [mask]="mask"
+  [dropSpecialCharacters]="dropSpecialCharacters"
+  (input)="handleInput($event)"
+  (blur)="handleBlur()"
+/>

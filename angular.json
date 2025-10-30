@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "meu-projeto": {
+    "crud": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -27,7 +27,7 @@
               }
             ],
             "styles": [
-              "src/styles.scss"
+              "src/presentation/styles/global.scss"
             ],
             "server": "src/main.server.ts",
             "outputMode": "server",
@@ -63,10 +63,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "meu-projeto:build:production"
+              "buildTarget": "crud:build:production"
             },
             "development": {
-              "buildTarget": "meu-projeto:build:development"
+              "buildTarget": "crud:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -86,11 +86,14 @@
               }
             ],
             "styles": [
-              "src/styles.scss"
+              "src/presentation/styles/global.scss"
             ]
           }
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "730d304b-a9e8-42fc-a548-2039e66243e0"
   }
 }

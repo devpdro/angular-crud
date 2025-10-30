@@ -6,6 +6,16 @@
     "outDir": "./out-tsc/app",
     "types": [
       "node"
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "src/*": [
+        "src/*"
+      ]
+    },
+    "lib": [
+      "ES2022",
+      "DOM"
     ]
   },
   "include": [

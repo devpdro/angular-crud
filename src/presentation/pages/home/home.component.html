@@ -1,0 +1,113 @@
+<div class="page">
+  <h1>Cadastro de Pessoas</h1>
+  <p class="subtitle">CRUD básico: id, CPF, nome, telefone.</p>
+
+  <div *ngIf="error" class="error">
+    {{ error }}
+  </div>
+
+  <form (ngSubmit)="handleAdd($event)" class="form">
+    <div>
+      <label for="cpf"><i class="ti ti-id"></i> CPF</label>
+      <app-input
+        id="cpf"
+        name="cpf"
+        [(ngModel)]="cpf"
+        placeholder="000.000.000-00"
+        inputmode="numeric"
+        mask="000.000.000-00"
+        [dropSpecialCharacters]="false"
+      ></app-input>
+    </div>
+    <div>
+      <label for="nome"><i class="ti ti-user"></i> Nome</label>
+      <app-input
+        id="nome"
+        name="nome"
+        [(ngModel)]="nome"
+        placeholder="Seu nome"
+      ></app-input>
+    </div>
+    <div>
+      <label for="telefone"><i class="ti ti-phone"></i> Telefone</label>
+      <app-input
+        id="telefone"
+        name="telefone"
+        [(ngModel)]="telefone"
+        placeholder="(00) 00000-0000"
+        inputmode="numeric"
+        [mask]="phoneMask"
+        [dropSpecialCharacters]="false"
+      ></app-input>
+    </div>
+    <app-button type="submit" typeStyle="btn2" label="Adicionar" width="auto"></app-button>
+  </form>
+
+  <div class="tableWrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>CPF</th>
+          <th>Nome</th>
+          <th>Telefone</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of pessoas">
+          <td>{{ p.id }}</td>
+          <td>
+            <ng-container *ngIf="editingId === p.id; else showCpf">
+              <app-input
+                [(ngModel)]="editCpf"
+                name="editCpf_{{ p.id }}"
+                placeholder="000.000.000-00"
+                inputmode="numeric"
+                mask="000.000.000-00"
+                [dropSpecialCharacters]="false"
+              ></app-input>
+            </ng-container>
+            <ng-template #showCpf>{{ p.cpf }}</ng-template>
+          </td>
+          <td>
+            <ng-container *ngIf="editingId === p.id; else showNome">
+              <app-input
+                [(ngModel)]="editNome"
+                name="editNome_{{ p.id }}"
+                placeholder="Nome"
+              ></app-input>
+            </ng-container>
+            <ng-template #showNome>{{ p.nome }}</ng-template>
+          </td>
+          <td>
+            <ng-container *ngIf="editingId === p.id; else showTelefone">
+              <app-input
+                [(ngModel)]="editTelefone"
+                name="editTelefone_{{ p.id }}"
+                placeholder="(00) 00000-0000"
+                inputmode="numeric"
+                [mask]="editPhoneMask"
+                [dropSpecialCharacters]="false"
+              ></app-input>
+            </ng-container>
+            <ng-template #showTelefone>{{ p.telefone }}</ng-template>
+          </td>
+          <td>
+            <ng-container *ngIf="editingId === p.id; else actionButtons">
+              <app-button (appClick)="saveEdit()" typeStyle="btn3" label="Salvar" width="auto"></app-button>
+              <app-button (appClick)="cancelEdit()" typeStyle="btn4" label="Cancelar" width="auto"></app-button>
+            </ng-container>
+            <ng-template #actionButtons>
+              <app-button (appClick)="startEdit(p)" typeStyle="btn5" label="Editar" width="auto"></app-button>
+              <app-button (appClick)="remove(p.id)" typeStyle="btn1" label="Excluir" width="auto"></app-button>
+            </ng-template>
+          </td>
+        </tr>
+        <tr *ngIf="pessoas.length === 0">
+          <td colspan="5" class="empty">Nenhum registro ainda. Adicione o primeiro acima.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,5 +1,5 @@
 {
-  "name": "meu-projeto",
+  "name": "crud",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -7,7 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:meu-projeto": "node dist/meu-projeto/server/server.mjs"
+    "serve:ssr:crud": "node dist/crud/server/server.mjs"
   },
   "prettier": {
     "printWidth": 100,
@@ -32,6 +32,7 @@
     "@angular/router": "^20.3.0",
     "@angular/ssr": "^20.3.8",
     "express": "^5.1.0",
+    "ngx-mask": "^17.1.8",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },

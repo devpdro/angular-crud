@@ -1,0 +1,9 @@
+@use '../../../styles/styles' as *;
+
+.input {
+  width: 100%;
+  padding: 8px;
+  font-family: $font-default;
+  border: 1px solid #ccc;
+  border-radius: $radii-small;
+}

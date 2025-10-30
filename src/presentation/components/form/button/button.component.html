@@ -1,0 +1,9 @@
+<button
+  [attr.type]="type"
+  class="btn {{ typeStyle }}"
+  [style.width]="width || 'auto'"
+  [disabled]="disabled"
+  (click)="onClick()"
+>
+  {{ label }}
+</button>

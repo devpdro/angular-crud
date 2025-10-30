@@ -1,0 +1,62 @@
+@import '../../../styles/themes/light.scss';
+@import '../../../styles/themes/mixins.scss';
+
+.btn {
+    font-family: $font-default;
+    font-weight: $weight-medium;
+    margin-bottom: 1rem;
+    padding: 0.8rem;
+}
+
+.btn1 {
+    border-radius: $radii-default;
+    background-color: $color-primary;
+    color: $color-snow;
+}
+
+.btn2 {
+    @include hover;
+    color: $color-primary;
+    border: 0.0625rem solid $color-primary;
+    border-radius: $radii-default;
+    background-color: $color-snow;
+    line-height: 1.2rem;
+
+    &:hover {
+        background-color: $color-primary;
+        color: $color-snow;
+    }
+}
+
+.btn3 {
+    @include hover;
+    margin-top: 1.6rem;
+    border: 0.0625rem solid $color-primary;
+    background-color: $color-primary;
+    color: $color-snow;
+}
+
+.btn4 {
+    @include hover;
+    color: $color-primary;
+    border: 0.0625rem solid $color-primary;
+
+    &:hover {
+        background-color: $color-primary;
+        color: $color-snow;
+    }
+}
+
+.btn5 {
+    @include hover;
+    box-shadow: rgba(0, 0, 0, 0.08) 0px 1px 4px;
+    background-color: $color-secondary;
+    color: $color-darkHigh;
+    border-radius: $radii-small;
+    margin-top: 0.6rem;
+
+    &:hover {
+        background-color: #3c91e6;
+        color: $color-snow;
+    }
+}
