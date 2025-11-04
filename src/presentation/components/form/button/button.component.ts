@@ -10,10 +10,11 @@ type ButtonStyle = 'btn1' | 'btn2' | 'btn3' | 'btn4' | 'btn5';
   templateUrl: './button.component.html',
   styleUrls: ['./button.module.scss'],
 })
-
 export class ButtonComponent {
   @Input() typeStyle: ButtonStyle = 'btn1';
   @Input() label = '';
+  @Input() icon?: string;
+  @Input() iconClass?: string;
   @Input() width: string | undefined;
   @Input() type: 'button' | 'submit' | 'reset' = 'button';
   @Input() disabled = false;

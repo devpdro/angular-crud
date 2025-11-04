@@ -5,5 +5,7 @@
   [disabled]="disabled"
   (click)="onClick()"
 >
-  {{ label }}
+  <i class="icon" *ngIf="iconClass" [ngClass]="iconClass"></i>
+  <span class="icon" *ngIf="icon">{{ icon }}</span>
+  <span class="label">{{ label }}</span>
 </button>

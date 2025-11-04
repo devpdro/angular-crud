@@ -18,7 +18,6 @@ import { NgxMaskDirective } from 'ngx-mask';
     },
   ],
 })
-
 export class InputComponent implements ControlValueAccessor {
   @Input() id?: string;
   @Input() name?: string;

@@ -1,3 +1,10 @@
 {
-  "pessoas": []
+  "pessoas": [
+    {
+      "id": 1,
+      "cpf": "123.456.789-00",
+      "nome": "Fulano de Tal",
+      "telefone": "(11) 98765-4321"
+    }
+  ]
 }

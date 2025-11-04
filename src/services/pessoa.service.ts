@@ -12,7 +12,7 @@ export type Pessoa = {
 
 @Injectable({ providedIn: 'root' })
 export class PessoaService {
-  private readonly baseUrl = 'http://localhost:3001/pessoas';
+  private readonly baseUrl = 'http://pessoal.local/api/clientes';
 
   constructor(private http: HttpClient) { }
 
