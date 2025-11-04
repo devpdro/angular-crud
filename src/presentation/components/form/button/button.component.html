@@ -2,10 +2,13 @@
   [attr.type]="type"
   class="btn {{ typeStyle }}"
   [style.width]="width || 'auto'"
+  [style.background-color]="color || null"
+  [style.color]="textColor || null"
+  [style.gap]="label ? '0.575rem' : '0'"
   [disabled]="disabled"
   (click)="onClick()"
 >
   <i class="icon" *ngIf="iconClass" [ngClass]="iconClass"></i>
   <span class="icon" *ngIf="icon">{{ icon }}</span>
-  <span class="label">{{ label }}</span>
+  <span class="label" *ngIf="label">{{ label }}</span>
 </button>

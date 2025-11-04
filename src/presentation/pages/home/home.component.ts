@@ -1,10 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Dialog, DialogModule } from '@angular/cdk/dialog';
 
 import { ButtonComponent } from 'src/presentation/components/form/button/button.component';
 import { InputComponent } from 'src/presentation/components/form/input/input.component';
 import { PessoaService, Pessoa } from 'src/services/pessoa.service';
+import { PersonModalComponent } from 'src/presentation/components/modal/person-modal/person-modal.component';
 
 import { Subscription } from 'rxjs';
 
@@ -19,7 +21,7 @@ const isValidTelefoneLength = (value: string) => {
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule, ButtonComponent, InputComponent],
+  imports: [CommonModule, FormsModule, ButtonComponent, InputComponent, DialogModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.module.scss'],
 })
@@ -40,7 +42,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   error: string | null = null;
 
-  constructor(private pessoaService: PessoaService) {}
+  constructor(private pessoaService: PessoaService, private dialog: Dialog) {}
 
   // Máscara dinâmica para telefone (10 ou 11 dígitos)
   get phoneMask(): string {
@@ -119,6 +121,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.editNome = p.nome;
     this.editTelefone = p.telefone;
     this.error = null;
+    this.dialog.open(PersonModalComponent, {
+      data: { mode: 'edit', pessoa: p },
+    });
   }
 
   cancelEdit() {
@@ -183,8 +188,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   view(pessoa: Pessoa) {
-    // Placeholder para ação de visualizar; pode abrir modal ou rota futura
-    console.log('View pessoa', pessoa);
+    this.dialog.open(PersonModalComponent, {
+      data: { mode: 'view', pessoa },
+    });
   }
 
   private resetForm() {

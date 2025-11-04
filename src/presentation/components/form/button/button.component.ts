@@ -15,6 +15,8 @@ export class ButtonComponent {
   @Input() label = '';
   @Input() icon?: string;
   @Input() iconClass?: string;
+  @Input() color?: string;
+  @Input() textColor?: string;
   @Input() width: string | undefined;
   @Input() type: 'button' | 'submit' | 'reset' = 'button';
   @Input() disabled = false;

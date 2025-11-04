@@ -92,6 +92,13 @@
           background-color: #f3f4f6;
         }
       }
+
+      // Ações: gap entre os botões de ícone
+      .actions {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
     }
   }
 }

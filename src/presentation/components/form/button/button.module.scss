@@ -40,13 +40,17 @@
 }
 
 .btn4 {
-  @include hover;
-  color: $color-primary;
-  border: 1px solid $color-primary;
+  background-color: #3b82f6;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 500;
+  border: none;
+  padding: 0.425rem 0.625rem; // reduzir ligeiramente a box
+  border-radius: 8px; // ligeira redução no raio para parecer mais compacto
 
-  &:hover {
-    background-color: $color-primary;
-    color: $color-snow;
+  .icon {
+    font-size: 14px; // aumentar bem pouco o ícone
+    line-height: 1;
   }
 }
 

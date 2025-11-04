@@ -100,7 +100,7 @@
             <ng-container *ngIf="editingId === p.id; else actionButtons">
               <app-button
                 (appClick)="saveEdit()"
-                typeStyle="btn3"
+                typeStyle="btn1"
                 icon="💾"
                 label="Salvar"
                 width="auto"
@@ -114,27 +114,35 @@
               ></app-button>
             </ng-container>
             <ng-template #actionButtons>
-              <app-button
-                (appClick)="view(p)"
-                typeStyle="btn5"
-                iconClass="ti ti-eye"
-                label=""
-                width="auto"
-              ></app-button>
-              <app-button
-                (appClick)="startEdit(p)"
-                typeStyle="btn5"
-                iconClass="ti ti-pencil"
-                label=""
-                width="auto"
-              ></app-button>
-              <app-button
-                (appClick)="remove(p.id)"
-                typeStyle="btn1"
-                iconClass="ti ti-trash"
-                label=""
-                width="auto"
-              ></app-button>
+              <div class="actions">
+                <app-button
+                  (appClick)="view(p)"
+                  typeStyle="btn4"
+                  iconClass="ti ti-eye"
+                  color="#9333EA"
+                  textColor="#fff"
+                  label=""
+                  width="auto"
+                ></app-button>
+                <app-button
+                  (appClick)="startEdit(p)"
+                  typeStyle="btn4"
+                  iconClass="ti ti-pencil"
+                  color="#F59E0B"
+                  textColor="#fff"
+                  label=""
+                  width="auto"
+                ></app-button>
+                <app-button
+                  (appClick)="remove(p.id)"
+                  typeStyle="btn4"
+                  iconClass="ti ti-trash"
+                  color="#dc2626"
+                  textColor="#fff"
+                  label=""
+                  width="auto"
+                ></app-button>
+              </div>
             </ng-template>
           </td>
         </tr>

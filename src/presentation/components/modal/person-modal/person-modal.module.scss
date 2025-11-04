@@ -1,0 +1,47 @@
+@use '../../../styles/styles' as *;
+
+.modal {
+  width: 480px;
+  background-color: #f9fafb;
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+  font-family: 'Poppins', sans-serif;
+  box-shadow: rgba(0, 0, 0, 0.08) 0px 8px 24px;
+}
+
+.header {
+  background-color: #f9fafb;
+  border-bottom: 2px solid #e5e7eb;
+  border-radius: 10px 10px 0 0;
+  padding: 0.375rem 0.775rem;
+  .title {
+    color: #111827;
+    font-size: 14px;
+    line-height: 17px;
+    font-weight: 600;
+  }
+}
+
+.body {
+  padding: 0.575rem 0.775rem;
+  label {
+    display: inline-flex;
+    align-items: center;
+    color: #4b5563;
+    gap: 4px;
+    margin-bottom: 5px;
+    font-size: 12px;
+    font-weight: 400;
+  }
+}
+
+.footer {
+  background-color: #f9fafb;
+  border-top: 2px solid #e5e7eb;
+  border-radius: 0 0 10px 10px;
+  padding: 0.375rem 0.775rem;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+}
