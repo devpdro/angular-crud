@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonComponent } from 'src/presentation/components/form/button/button.component';
 import { InputComponent } from 'src/presentation/components/form/input/input.component';
-import { Pessoa } from 'src/services/pessoa.service';
+import { Pessoa } from 'src/main/services/pessoa.service';
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 
 type ModalMode = 'view' | 'edit';
@@ -13,7 +13,7 @@ type ModalMode = 'view' | 'edit';
   standalone: true,
   imports: [CommonModule, FormsModule, ButtonComponent, InputComponent],
   templateUrl: './person-modal.component.html',
-  styleUrls: ['./person-modal.module.scss']
+  styleUrls: ['./person-modal.module.scss'],
 })
 export class PersonModalComponent {
   mode: ModalMode = 'view';

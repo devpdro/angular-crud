@@ -28,7 +28,6 @@ export class InputComponent implements ControlValueAccessor {
   @Input() mask?: string | null;
   @Input() dropSpecialCharacters: boolean = false;
 
-  // Reemite o evento input para permitir máscaras no Home
   @Output() input = new EventEmitter<Event>();
 
   value = '';

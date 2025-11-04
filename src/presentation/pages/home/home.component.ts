@@ -5,7 +5,7 @@ import { Dialog, DialogModule } from '@angular/cdk/dialog';
 
 import { ButtonComponent } from 'src/presentation/components/form/button/button.component';
 import { InputComponent } from 'src/presentation/components/form/input/input.component';
-import { PessoaService, Pessoa } from 'src/services/pessoa.service';
+import { PessoaService, Pessoa } from 'src/main/services/pessoa.service';
 import { PersonModalComponent } from 'src/presentation/components/modal/person-modal/person-modal.component';
 
 import { Subscription } from 'rxjs';
@@ -27,7 +27,7 @@ const isValidTelefoneLength = (value: string) => {
 })
 export class HomeComponent implements OnInit, OnDestroy {
   pessoas: Pessoa[] = [
-    { id: 1, cpf: '123.456.789-00', nome: 'Fulano de Tal', telefone: '(11) 98765-4321' }
+    { id: 1, cpf: '123.456.789-00', nome: 'Fulano de Tal', telefone: '(11) 98765-4321' },
   ];
   private subscription = new Subscription();
 
@@ -44,10 +44,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     const len = onlyDigits(this.telefone).length;
     return len > 10 ? '(00) 00000-0000' : '(00) 0000-0000';
   }
-  get editPhoneMask(): string {
-    // removido: edição inline não é mais usada
-    return '(00) 0000-0000';
-  }
 
   ngOnInit(): void {
     // Carrega lista inicial do servidor JSON
@@ -61,7 +57,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         },
         error: () => {
           // Ignora erros para preservar os dados locais (seed)
-        }
+        },
       })
     );
   }
