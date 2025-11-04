@@ -2,26 +2,37 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
+import { PaginatorModule } from 'primeng/paginator';
 
 import { Subscription } from 'rxjs';
 
-import { ButtonComponent, InputComponent, ClientModalComponent } from 'src/presentation/components';
-import { ClientService, Client } from 'src/main/services';
-import { isValidCPFLength, isValidTelefoneLength } from 'src/utils';
+import { ButtonComponent, InputComponent, ClientModalComponent } from 'src/app/components';
+import { isValidCPFLength, isValidTelefoneLength } from 'src/app/utilities';
+import { HomeService, Client } from './home.service';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule, ButtonComponent, InputComponent, DialogModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ButtonComponent,
+    InputComponent,
+    DialogModule,
+    PaginatorModule,
+  ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.module.scss'],
 })
-
 export class HomeComponent implements OnInit, OnDestroy {
-  clients: Client[] = [
-    { id: 1, cpf: '123.456.789-00', nome: 'Fulano de Tal', telefone: '(11) 98765-4321' },
-  ];
+  clients: Client[] = [];
   private subscription = new Subscription();
+
+  // Paginação (frontend)
+  first = 0;
+  rows = 10;
+  rowsOptions = [10, 20, 50];
+  pagedClients: Client[] = [];
 
   cpf = '';
   nome = '';
@@ -29,20 +40,21 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   error: string | null = null;
 
-  constructor(private clientService: ClientService, private dialog: Dialog) {}
+  constructor(private homeService: HomeService, private dialog: Dialog) {}
 
   ngOnInit(): void {
-    // Carrega lista inicial do servidor JSON
+    // Carrega lista inicial do backend
+    console.log('[Home] ngOnInit: solicitando lista de clientes');
     this.subscription.add(
-      this.clientService.getAll().subscribe({
+      this.homeService.getAll().subscribe({
         next: (clients) => {
-          // Mantém o registro inicial se o backend retornar vazio
-          if (Array.isArray(clients) && clients.length > 0) {
-            this.clients = clients;
-          }
+          console.log('[Home] getAll next', clients);
+          this.clients = clients; // serviço já normaliza para array
+          this.updatePaged();
         },
-        error: () => {
-          // Ignora erros para preservar os dados locais (seed)
+        error: (error) => {
+          console.error('[Home] getAll error', error);
+          // Em caso de erro, mantém estado atual (lista vazia)
         },
       })
     );
@@ -65,13 +77,18 @@ export class HomeComponent implements OnInit, OnDestroy {
       return;
     }
     if (!isValidTelefoneLength(this.telefone)) {
-      this.error = 'Telefone deve ter  11 dígitos.';
+      this.error = 'Telefone deve ter 11 dígitos.';
       return;
     }
 
     try {
+      console.log('[Home] add payload', {
+        cpf: this.cpf,
+        nome: this.nome.trim(),
+        telefone: this.telefone,
+      });
       this.subscription.add(
-        this.clientService
+        this.homeService
           .add({
             cpf: this.cpf,
             nome: this.nome.trim(),
@@ -79,10 +96,12 @@ export class HomeComponent implements OnInit, OnDestroy {
           })
           .subscribe(
             (created) => {
+              console.log('[Home] add created', created);
               this.clients = [...this.clients, created];
               this.resetForm();
             },
-            () => {
+            (error) => {
+              console.error('[Home] add error', error);
               this.error = 'Erro ao salvar dados. Tente novamente.';
             }
           )
@@ -101,14 +120,21 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   handleList() {
+    console.log('[Home] handleList: solicitando lista de clientes');
     this.subscription.add(
-      this.clientService.getAll().subscribe({
+      this.homeService.getAll().subscribe({
         next: (clients) => {
-          if (Array.isArray(clients)) {
-            this.clients = clients;
+          console.log('[Home] handleList next', clients);
+          this.clients = clients;
+          // mantém posição atual, mas revalida limites
+          const maxFirst = Math.max(0, this.clients.length - (this.clients.length % this.rows));
+          if (this.first >= this.clients.length) {
+            this.first = Math.min(this.first, maxFirst);
           }
+          this.updatePaged();
         },
-        error: () => {
+        error: (error) => {
+          console.error('[Home] handleList error', error);
           // Mantém dados atuais em caso de erro
         },
       })
@@ -123,14 +149,20 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   async remove(id: number) {
+    console.log('[Home] remove: iniciando', id);
     const prev = this.clients;
     this.clients = this.clients.filter((p) => p.id !== id);
+    this.updatePaged();
     this.subscription.add(
-      this.clientService.remove(id).subscribe(
-        () => {},
+      this.homeService.remove(id).subscribe(
         () => {
+          console.log('[Home] remove: concluído', id);
+        },
+        (error) => {
+          console.error('[Home] remove error', error);
           this.error = 'Erro ao remover dados. Tente novamente.';
           this.clients = prev; // rollback se falhar
+          this.updatePaged();
         }
       )
     );
@@ -147,5 +179,16 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.nome = '';
     this.telefone = '';
     this.error = null;
+  }
+
+  // Helpers de paginação
+  private updatePaged() {
+    this.pagedClients = this.clients.slice(this.first, this.first + this.rows);
+  }
+
+  onPageChange(event: { first: number; rows: number; page: number; pageCount: number }) {
+    this.first = event.first;
+    this.rows = event.rows;
+    this.updatePaged();
   }
 }
