@@ -48,102 +48,49 @@
     <table class="table">
       <thead>
         <tr>
-          <th>
-            <span class="th-id"><span>ID</span><i class="ti ti-arrows-sort"></i></span>
-          </th>
-          <th>CPF</th>
-          <th>Nome</th>
-          <th>Telefone</th>
+          <th><span class="th-sort"><span>ID</span><i class="ti ti-arrows-sort"></i></span></th>
+          <th><span class="th-sort"><span>CPF</span><i class="ti ti-arrows-sort"></i></span></th>
+          <th><span class="th-sort"><span>Nome</span><i class="ti ti-arrows-sort"></i></span></th>
+          <th><span class="th-sort"><span>Telefone</span><i class="ti ti-arrows-sort"></i></span></th>
           <th>Ações</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let p of pessoas">
           <td>{{ p.id }}</td>
+          <td>{{ p.cpf }}</td>
+          <td>{{ p.nome }}</td>
+          <td>{{ p.telefone }}</td>
           <td>
-            <ng-container *ngIf="editingId === p.id; else showCpf">
-              <app-input
-                [(ngModel)]="editCpf"
-                name="editCpf_{{ p.id }}"
-                placeholder="000.000.000-00"
-                inputmode="numeric"
-                mask="000.000.000-00"
-                [dropSpecialCharacters]="false"
-              ></app-input>
-            </ng-container>
-            <ng-template #showCpf>{{ p.cpf }}</ng-template>
-          </td>
-          <td>
-            <ng-container *ngIf="editingId === p.id; else showNome">
-              <app-input
-                [(ngModel)]="editNome"
-                name="editNome_{{ p.id }}"
-                placeholder="Nome"
-              ></app-input>
-            </ng-container>
-            <ng-template #showNome>{{ p.nome }}</ng-template>
-          </td>
-          <td>
-            <ng-container *ngIf="editingId === p.id; else showTelefone">
-              <app-input
-                [(ngModel)]="editTelefone"
-                name="editTelefone_{{ p.id }}"
-                placeholder="(00) 00000-0000"
-                inputmode="numeric"
-                [mask]="editPhoneMask"
-                [dropSpecialCharacters]="false"
-              ></app-input>
-            </ng-container>
-            <ng-template #showTelefone>{{ p.telefone }}</ng-template>
-          </td>
-          <td>
-            <ng-container *ngIf="editingId === p.id; else actionButtons">
+            <div class="actions">
               <app-button
-                (appClick)="saveEdit()"
-                typeStyle="btn1"
-                icon="💾"
-                label="Salvar"
-                width="auto"
-              ></app-button>
-              <app-button
-                (appClick)="cancelEdit()"
+                (appClick)="view(p)"
                 typeStyle="btn4"
-                icon="↩️"
-                label="Cancelar"
+                iconClass="ti ti-eye"
+                color="#9333EA"
+                textColor="#fff"
+                label=""
                 width="auto"
               ></app-button>
-            </ng-container>
-            <ng-template #actionButtons>
-              <div class="actions">
-                <app-button
-                  (appClick)="view(p)"
-                  typeStyle="btn4"
-                  iconClass="ti ti-eye"
-                  color="#9333EA"
-                  textColor="#fff"
-                  label=""
-                  width="auto"
-                ></app-button>
-                <app-button
-                  (appClick)="startEdit(p)"
-                  typeStyle="btn4"
-                  iconClass="ti ti-pencil"
-                  color="#F59E0B"
-                  textColor="#fff"
-                  label=""
-                  width="auto"
-                ></app-button>
-                <app-button
-                  (appClick)="remove(p.id)"
-                  typeStyle="btn4"
-                  iconClass="ti ti-trash"
-                  color="#dc2626"
-                  textColor="#fff"
-                  label=""
-                  width="auto"
-                ></app-button>
-              </div>
-            </ng-template>
+              <app-button
+                (appClick)="startEdit(p)"
+                typeStyle="btn4"
+                iconClass="ti ti-pencil"
+                color="#F59E0B"
+                textColor="#fff"
+                label=""
+                width="auto"
+              ></app-button>
+              <app-button
+                (appClick)="remove(p.id)"
+                typeStyle="btn4"
+                iconClass="ti ti-trash"
+                color="#dc2626"
+                textColor="#fff"
+                label=""
+                width="auto"
+              ></app-button>
+            </div>
           </td>
         </tr>
         <tr *ngIf="pessoas.length === 0">

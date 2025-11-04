@@ -3,14 +3,11 @@
     <span class="title">{{ mode === 'view' ? 'Visualizar Pessoa' : 'Editar Pessoa' }}</span>
   </div>
   <div class="body">
-    <label><i class="ti ti-id"></i> ID</label>
-    <app-input [disabled]="true" [(ngModel)]="idStr"></app-input>
+    <label><i class="ti ti-id"></i> CPF</label>
+    <app-input [(ngModel)]="edited.cpf" [disabled]="mode==='view'" mask="000.000.000-00" [dropSpecialCharacters]="false"></app-input>
 
     <label><i class="ti ti-user"></i> Nome</label>
     <app-input [(ngModel)]="edited.nome" [disabled]="mode==='view'"></app-input>
-
-    <label><i class="ti ti-id"></i> CPF</label>
-    <app-input [(ngModel)]="edited.cpf" [disabled]="mode==='view'" mask="000.000.000-00" [dropSpecialCharacters]="false"></app-input>
 
     <label><i class="ti ti-phone"></i> Telefone</label>
     <app-input [(ngModel)]="edited.telefone" [disabled]="mode==='view'" mask="(00) 00000-0000" [dropSpecialCharacters]="false"></app-input>

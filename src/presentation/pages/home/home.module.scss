@@ -76,6 +76,12 @@
         align-items: center;
         gap: 4px;
       }
+      // Classe genérica para cabeçalhos ordenáveis
+      thead th .th-sort {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+      }
 
       tbody td {
         border-bottom: 1px solid #e5e7eb;

@@ -18,7 +18,6 @@ type ModalMode = 'view' | 'edit';
 export class PersonModalComponent {
   mode: ModalMode = 'view';
   edited: Pessoa = { id: 0, nome: '', cpf: '', telefone: '' };
-  idStr = '';
 
   constructor(
     private ref: DialogRef<Pessoa>,
@@ -27,7 +26,6 @@ export class PersonModalComponent {
     if (data) {
       this.mode = data.mode;
       this.edited = { ...data.pessoa };
-      this.idStr = String(this.edited.id ?? '');
     }
   }
 

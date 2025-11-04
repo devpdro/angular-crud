@@ -35,11 +35,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   nome = '';
   telefone = '';
 
-  editingId: number | null = null;
-  editCpf = '';
-  editNome = '';
-  editTelefone = '';
-
   error: string | null = null;
 
   constructor(private pessoaService: PessoaService, private dialog: Dialog) {}
@@ -50,8 +45,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     return len > 10 ? '(00) 00000-0000' : '(00) 0000-0000';
   }
   get editPhoneMask(): string {
-    const len = onlyDigits(this.editTelefone).length;
-    return len > 10 ? '(00) 00000-0000' : '(00) 0000-0000';
+    // removido: edição inline não é mais usada
+    return '(00) 0000-0000';
   }
 
   ngOnInit(): void {
@@ -116,62 +111,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   startEdit(p: Pessoa) {
-    this.editingId = p.id;
-    this.editCpf = p.cpf;
-    this.editNome = p.nome;
-    this.editTelefone = p.telefone;
     this.error = null;
     this.dialog.open(PersonModalComponent, {
       data: { mode: 'edit', pessoa: p },
     });
-  }
-
-  cancelEdit() {
-    this.editingId = null;
-    this.editCpf = '';
-    this.editNome = '';
-    this.editTelefone = '';
-    this.error = null;
-  }
-
-  async saveEdit() {
-    this.error = null;
-    if (!this.editNome.trim()) {
-      this.error = 'Nome é obrigatório.';
-      return;
-    }
-    if (!isValidCPFLength(this.editCpf)) {
-      this.error = 'CPF deve ter 11 dígitos.';
-      return;
-    }
-    if (!isValidTelefoneLength(this.editTelefone)) {
-      this.error = 'Telefone deve ter 10 ou 11 dígitos.';
-      return;
-    }
-
-    if (this.editingId === null) return;
-
-    try {
-      this.subscription.add(
-        this.pessoaService
-          .update(this.editingId, {
-            cpf: this.editCpf,
-            nome: this.editNome.trim(),
-            telefone: this.editTelefone,
-          })
-          .subscribe(
-            (updated) => {
-              this.pessoas = this.pessoas.map((p) => (p.id === this.editingId ? updated : p));
-              this.cancelEdit();
-            },
-            () => {
-              this.error = 'Erro ao atualizar dados. Tente novamente.';
-            }
-          )
-      );
-    } catch (error) {
-      this.error = 'Erro ao atualizar dados. Tente novamente.';
-    }
   }
 
   async remove(id: number) {
