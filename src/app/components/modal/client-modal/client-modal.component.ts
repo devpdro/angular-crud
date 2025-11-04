@@ -3,9 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 
-import { ButtonComponent, InputComponent } from 'src/presentation/components';
+import { ButtonComponent, InputComponent } from 'src/app/components';
 
-import { Client } from 'src/main/services/client.service';
+import { Client } from 'src/app/pages/home/home.service';
 
 type ModalMode = 'view' | 'edit';
 
