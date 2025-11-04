@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-type ButtonStyle = 'btn1' | 'btn2' | 'btn3' | 'btn4' | 'btn5';
+type ButtonStyle = 'btn1' | 'icon-btn';
 
 @Component({
   selector: 'app-button',
@@ -12,18 +12,30 @@ type ButtonStyle = 'btn1' | 'btn2' | 'btn3' | 'btn4' | 'btn5';
 })
 export class ButtonComponent {
   @Input() typeStyle: ButtonStyle = 'btn1';
+  @Input() width?: string;
+  @Input() disabled = false;
   @Input() label = '';
   @Input() icon?: string;
   @Input() iconClass?: string;
   @Input() color?: string;
-  @Input() textColor?: string;
-  @Input() width: string | undefined;
+  @Input() textColor?: string = '#fff';
+  @Input() border?: string;
   @Input() type: 'button' | 'submit' | 'reset' = 'button';
-  @Input() disabled = false;
+  // Loading
+  @Input() loading = false;
+  @Input() loadingLabel = 'Carregando...';
+  @Input() loadingIconClass = 'ti ti-loader-2 spin';
+  @Input() autoLoadingOnClick = true;
+  @Output() loadingChange = new EventEmitter<boolean>();
   @Output() appClick = new EventEmitter<void>();
 
   onClick() {
-    if (this.disabled) return;
+    if (this.disabled || this.loading) return;
+    const shouldAutoLoad = this.autoLoadingOnClick && this.typeStyle !== 'icon-btn';
+    if (shouldAutoLoad) {
+      this.loading = true;
+      this.loadingChange.emit(true);
+    }
     this.appClick.emit();
   }
 }

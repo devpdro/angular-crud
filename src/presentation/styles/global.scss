@@ -11,10 +11,11 @@ body {
 }
 
 input,
-button {
+button {  
+  font-family: 'Poppins', sans-serif;
+  background: none;
   border: 0;
   outline: 0;
-  background: none;
 }
 
 input[type='number']::-webkit-outer-spin-button,

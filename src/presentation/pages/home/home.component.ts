@@ -3,20 +3,11 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
 
-import { ButtonComponent } from 'src/presentation/components/form/button/button.component';
-import { InputComponent } from 'src/presentation/components/form/input/input.component';
-import { PessoaService, Pessoa } from 'src/main/services/pessoa.service';
-import { PersonModalComponent } from 'src/presentation/components/modal/person-modal/person-modal.component';
-
 import { Subscription } from 'rxjs';
 
-const onlyDigits = (value: string) => value.replace(/\D/g, '');
-
-const isValidCPFLength = (value: string) => onlyDigits(value).length === 11;
-const isValidTelefoneLength = (value: string) => {
-  const len = onlyDigits(value).length;
-  return len === 10 || len === 11;
-};
+import { ButtonComponent, InputComponent, ClientModalComponent } from 'src/presentation/components';
+import { ClientService, Client } from 'src/main/services';
+import { isValidCPFLength, isValidTelefoneLength } from 'src/utils';
 
 @Component({
   selector: 'app-home',
@@ -25,8 +16,9 @@ const isValidTelefoneLength = (value: string) => {
   templateUrl: './home.component.html',
   styleUrls: ['./home.module.scss'],
 })
+
 export class HomeComponent implements OnInit, OnDestroy {
-  pessoas: Pessoa[] = [
+  clients: Client[] = [
     { id: 1, cpf: '123.456.789-00', nome: 'Fulano de Tal', telefone: '(11) 98765-4321' },
   ];
   private subscription = new Subscription();
@@ -37,22 +29,16 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   error: string | null = null;
 
-  constructor(private pessoaService: PessoaService, private dialog: Dialog) {}
-
-  // Máscara dinâmica para telefone (10 ou 11 dígitos)
-  get phoneMask(): string {
-    const len = onlyDigits(this.telefone).length;
-    return len > 10 ? '(00) 00000-0000' : '(00) 0000-0000';
-  }
+  constructor(private clientService: ClientService, private dialog: Dialog) {}
 
   ngOnInit(): void {
     // Carrega lista inicial do servidor JSON
     this.subscription.add(
-      this.pessoaService.getAll().subscribe({
-        next: (pessoas) => {
+      this.clientService.getAll().subscribe({
+        next: (clients) => {
           // Mantém o registro inicial se o backend retornar vazio
-          if (Array.isArray(pessoas) && pessoas.length > 0) {
-            this.pessoas = pessoas;
+          if (Array.isArray(clients) && clients.length > 0) {
+            this.clients = clients;
           }
         },
         error: () => {
@@ -79,13 +65,13 @@ export class HomeComponent implements OnInit, OnDestroy {
       return;
     }
     if (!isValidTelefoneLength(this.telefone)) {
-      this.error = 'Telefone deve ter 10 ou 11 dígitos.';
+      this.error = 'Telefone deve ter  11 dígitos.';
       return;
     }
 
     try {
       this.subscription.add(
-        this.pessoaService
+        this.clientService
           .add({
             cpf: this.cpf,
             nome: this.nome.trim(),
@@ -93,7 +79,7 @@ export class HomeComponent implements OnInit, OnDestroy {
           })
           .subscribe(
             (created) => {
-              this.pessoas = [...this.pessoas, created];
+              this.clients = [...this.clients, created];
               this.resetForm();
             },
             () => {
@@ -106,29 +92,53 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   }
 
-  startEdit(p: Pessoa) {
+  handleClear() {
+    this.resetForm();
+  }
+
+  openFilters() {
+    // Placeholder para futuros filtros; por enquanto sem ação
+  }
+
+  handleList() {
+    this.subscription.add(
+      this.clientService.getAll().subscribe({
+        next: (clients) => {
+          if (Array.isArray(clients)) {
+            this.clients = clients;
+          }
+        },
+        error: () => {
+          // Mantém dados atuais em caso de erro
+        },
+      })
+    );
+  }
+
+  startEdit(p: Client) {
     this.error = null;
-    this.dialog.open(PersonModalComponent, {
-      data: { mode: 'edit', pessoa: p },
+    this.dialog.open(ClientModalComponent, {
+      data: { mode: 'edit', cliente: p },
     });
   }
 
   async remove(id: number) {
+    const prev = this.clients;
+    this.clients = this.clients.filter((p) => p.id !== id);
     this.subscription.add(
-      this.pessoaService.remove(id).subscribe(
-        () => {
-          this.pessoas = this.pessoas.filter((p) => p.id !== id);
-        },
+      this.clientService.remove(id).subscribe(
+        () => {},
         () => {
           this.error = 'Erro ao remover dados. Tente novamente.';
+          this.clients = prev; // rollback se falhar
         }
       )
     );
   }
 
-  view(pessoa: Pessoa) {
-    this.dialog.open(PersonModalComponent, {
-      data: { mode: 'view', pessoa },
+  view(pessoa: Client) {
+    this.dialog.open(ClientModalComponent, {
+      data: { mode: 'view', cliente: pessoa },
     });
   }
 

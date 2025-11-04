@@ -2,17 +2,27 @@
   max-width: 1280px;
   margin: 32px auto;
   padding: 16px 20px;
+
   .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     background-color: #f9fafb;
     border: 2px solid #e5e7eb;
     border-radius: 10px 10px 0 0;
-    padding: 0.175rem 0.775rem;
+    padding: 0.475rem 0.775rem;
 
     .title {
       color: #111827;
       font-size: 14px;
       line-height: 17px;
       font-weight: 600;
+    }
+
+    .header-actions {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
     }
   }
 
@@ -24,8 +34,8 @@
     border-left: 2px solid #e5e7eb;
     border-right: 2px solid #e5e7eb;
     border-bottom: 2px solid #e5e7eb;
-    padding: 0.375rem 0.775rem 0.275rem 0.775rem;
-    gap: 45px;
+    padding: 0.375rem 0.775rem 0.875rem 0.775rem;
+    gap: 20px;
 
     label {
       display: inline-flex;
@@ -33,21 +43,22 @@
       color: #4b5563;
       gap: 4px;
       margin-bottom: 5px;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 400;
     }
   }
 
   .footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
     background-color: #f9fafb;
     border-left: 2px solid #e5e7eb;
     border-right: 2px solid #e5e7eb;
     border-bottom: 2px solid #e5e7eb;
     border-radius: 0 0 10px 10px;
-    padding: 0.275rem 0.775rem 0.375rem 0.775rem;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
+    padding: 0.375rem 0.775rem 0.375rem 0.775rem;
+    gap: 12px;
   }
 
   .tableWrap {
@@ -74,18 +85,30 @@
         align-items: center;
         gap: 4px;
       }
-      // Classe genérica para cabeçalhos ordenáveis
+
       thead th .th-sort {
         display: inline-flex;
         align-items: center;
         gap: 4px;
       }
 
+      thead th.clickable .th-sort {
+        display: inline-flex;
+        align-items: center;
+        cursor: pointer;
+        border-radius: 8px;
+      }
+
+      thead th.clickable .th-sort:hover {
+        background-color: #fffbeb;
+      }
+
       tbody td {
         border-bottom: 1px solid #e5e7eb;
-        padding: 0.175rem 16px;
+        padding: 0.275rem 16px;
         font-size: 11px;
         font-weight: 400;
+
         &:last-child {
           white-space: nowrap;
         }
@@ -97,11 +120,10 @@
         }
       }
 
-      // Ações: gap entre os botões de ícone
       .actions {
         display: inline-flex;
         align-items: center;
-        gap: 8px;
+        gap: 3px;
       }
     }
   }

@@ -19,15 +19,15 @@ import { NgxMaskDirective } from 'ngx-mask';
   ],
 })
 export class InputComponent implements ControlValueAccessor {
-  @Input() id?: string;
-  @Input() name?: string;
-  @Input() placeholder = '';
-  @Input() type: string = 'text';
+  @Input({ required: true }) id!: string;
+  @Input({ required: true }) name!: string;
+  @Input({ required: true }) type: string = 'text';
   @Input() inputmode?: string;
   @Input() disabled = false;
-  @Input() mask?: string | null;
+  @Input() placeholder = '';
+  @Input({ required: true }) mask?: string | null;
   @Input() dropSpecialCharacters: boolean = false;
-
+  @Input() required: boolean = false;
   @Output() input = new EventEmitter<Event>();
 
   value = '';

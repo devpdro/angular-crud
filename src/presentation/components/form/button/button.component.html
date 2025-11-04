@@ -2,13 +2,16 @@
   [attr.type]="type"
   class="btn {{ typeStyle }}"
   [style.width]="width || 'auto'"
-  [style.background-color]="color || null"
-  [style.color]="textColor || null"
+  [style.background-color]="color"
+  [style.color]="textColor"
+  [style.border]="border"
   [style.gap]="label ? '0.575rem' : '0'"
-  [disabled]="disabled"
+  [disabled]="disabled || loading"
   (click)="onClick()"
 >
-  <i class="icon" *ngIf="iconClass" [ngClass]="iconClass"></i>
-  <span class="icon" *ngIf="icon">{{ icon }}</span>
-  <span class="label" *ngIf="label">{{ label }}</span>
+  <i class="icon" *ngIf="!loading && iconClass" [ngClass]="iconClass"></i>
+  <span class="icon" *ngIf="!loading && icon">{{ icon }}</span>
+  <i class="icon" *ngIf="loading" [ngClass]="loadingIconClass"></i>
+  <span class="label" *ngIf="!loading && label">{{ label }}</span>
+  <span class="label" *ngIf="loading">{{ loadingLabel }}</span>
 </button>
