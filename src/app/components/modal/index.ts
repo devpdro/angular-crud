@@ -1,1 +1,0 @@
-export { ClientModalComponent } from './client-modal/client-modal.component';

@@ -30,16 +30,13 @@
               },
               {
                 "glob": "**/*",
-                "input": "node_modules/primeng/resources",
-                "output": "primeng/resources"
-              },
-              {
-                "glob": "**/*",
                 "input": "node_modules/primeicons",
                 "output": "primeicons"
               }
             ],
-            "styles": ["src/app/styles/global.scss"],
+            "styles": [
+              "src/app/styles/global.scss"
+            ],
             "server": "src/main.server.ts",
             "outputMode": "server",
             "ssr": {
@@ -100,10 +97,8 @@
               }
             ],
             "styles": [
-              "primeng/resources/themes/lara-light-blue/theme.css",
-              "primeng/resources/primeng.min.css",
               "primeicons/primeicons.css",
-              "src/presentation/styles/global.scss"
+              "src/app/styles/global.scss"
             ]
           }
         }

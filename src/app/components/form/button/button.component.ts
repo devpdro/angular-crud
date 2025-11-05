@@ -21,13 +21,14 @@ export class ButtonComponent {
   @Input() textColor?: string = '#fff';
   @Input() border?: string;
   @Input() type: 'button' | 'submit' | 'reset' = 'button';
-  // Loading
+  @Output() appClick = new EventEmitter<void>();
+
+
   @Input() loading = false;
   @Input() loadingLabel = 'Carregando...';
   @Input() loadingIconClass = 'ti ti-loader-2 spin';
   @Input() autoLoadingOnClick = true;
   @Output() loadingChange = new EventEmitter<boolean>();
-  @Output() appClick = new EventEmitter<void>();
 
   onClick() {
     if (this.disabled || this.loading) return;

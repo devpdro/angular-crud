@@ -3,21 +3,17 @@
     <h1 class="title">Cadastro Clientes</h1>
     <div class="header-actions">
       <app-button
-        (appClick)="handleClear()"
         typeStyle="btn1"
         iconClass="ti ti-eraser"
         color="#DA2626"
-        textColor="#fff"
         label="Limpar"
         loadingLabel="Limpando..."
         width="auto"
       ></app-button>
       <app-button
-        (appClick)="openFilters()"
         typeStyle="btn1"
         iconClass="ti ti-search"
         color="#64748B"
-        textColor="#fff"
         label="Filtros"
         loadingLabel="Abrindo..."
         width="auto"
@@ -70,24 +66,56 @@
 
   <div class="footer">
     <app-button
-      (appClick)="handleAdd()"
       typeStyle="btn1"
-      iconClass="ti ti-plus"
+      iconClass="ti ti-eraser"
       color="#F59E0B"
-      textColor="#fff"
       label="Adicionar"
       loadingLabel="Adicionando..."
       width="auto"
-    ></app-button>
+    >
+    </app-button>
     <app-button
-      (appClick)="handleList()"
       typeStyle="btn1"
       iconClass="ti ti-search"
       color="#F59E0B"
-      textColor="#fff"
       label="Listar"
       loadingLabel="Listando..."
       width="auto"
     ></app-button>
   </div>
+
+  <p-table
+    [rows]="10"
+    [value]="clients.data"
+    [paginator]="true"
+    [sortField]="'nome'"
+    [sortOrder]="1"
+    [totalRecords]="clients.total"
+    [lazy]="true"
+    selectionMode="single"
+    (onLazyLoad)="loadItens($event)"
+    [showCurrentPageReport]="true"
+    currentPageReportTemplate="Mostrando {first} até {last} de {totalRecords}"
+    [rowsPerPageOptions]="[5, 10, 20, 30, 40, 50]"
+    dataKey="id"
+    responsiveLayout="scroll"
+    [rowHover]="true"
+    [styleClass]="'p-datatable-sm p-datatable-striped p-datatable-gridlines'"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th>CPF</th>
+        <th>Nome</th>
+        <th>Telefone</th>
+        <th>Ações</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-item>
+      <tr>
+        <td>{{ item.cpf }}</td>
+        <td>{{ item.nome }}</td>
+        <td>{{ item.telefone }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
 </div>

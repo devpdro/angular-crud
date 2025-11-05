@@ -3,12 +3,11 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { PaginatorModule } from 'primeng/paginator';
+import { TableModule } from 'primeng/table';
 
-import { Subscription } from 'rxjs';
-
-import { ButtonComponent, InputComponent, ClientModalComponent } from 'src/app/components';
+import { ButtonComponent, InputComponent } from 'src/app/components';
 import { isValidCPFLength, isValidTelefoneLength } from 'src/app/utilities';
-import { HomeService, Client } from './home.service';
+import { HomeService } from 'src/app/pages/home/home.service';
 
 @Component({
   selector: 'app-home',
@@ -20,158 +19,97 @@ import { HomeService, Client } from './home.service';
     InputComponent,
     DialogModule,
     PaginatorModule,
+    TableModule,
   ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.module.scss'],
 })
-export class HomeComponent implements OnInit, OnDestroy {
-  clients: Client[] = [];
-  private subscription = new Subscription();
-
-  // Paginação (frontend)
-  first = 0;
-  rows = 10;
-  rowsOptions = [10, 20, 50];
-  pagedClients: Client[] = [];
-
-  cpf = '';
-  nome = '';
-  telefone = '';
-
+export class HomeComponent implements OnInit {
+  cpf: string = '';
+  nome: string = '';
+  telefone: string = '';
+  content: any = '';
+  clients: any = [];
   error: string | null = null;
 
-  constructor(private homeService: HomeService, private dialog: Dialog) {}
+  constructor(private homeService: HomeService) {}
 
-  ngOnInit(): void {
-    // Carrega lista inicial do backend
-    console.log('[Home] ngOnInit: solicitando lista de clientes');
-    this.subscription.add(
-      this.homeService.getAll().subscribe({
-        next: (clients) => {
-          console.log('[Home] getAll next', clients);
-          this.clients = clients; // serviço já normaliza para array
-          this.updatePaged();
-        },
-        error: (error) => {
-          console.error('[Home] getAll error', error);
-          // Em caso de erro, mantém estado atual (lista vazia)
-        },
-      })
-    );
-  }
+  ngOnInit(): void {}
 
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-  }
+  loadItens($event: any) {
+    console.log('[Home] pageChange', $event);
 
-  // Máscaras agora via ngx-mask no template; removidos handlers manuais
+    let first = $event.first === undefined ? 0 : $event.first;
+    let limit = $event.rows ?? 10;
+    let page = first / limit;
+    let orderby = $event.sortField || 'nome';
+    let val_order = $event.sortOrder;
+    let direction = 'asc';
+    let content = this.content;
 
-  async handleAdd() {
-    this.error = null;
-    if (!this.nome.trim()) {
-      this.error = 'Nome é obrigatório.';
-      return;
+    console.log('Página:', page);
+    console.log('Limite por página:', limit);
+    console.log('Ordenar por:', orderby);
+    console.log('Direção:', direction);
+
+    if (val_order === 1) {
+      direction = 'asc';
+    } else {
+      direction = 'desc';
     }
+
+    this.homeService.getItems(page + 1, limit, orderby, direction, content).subscribe({
+      next: (items) => {
+        console.log('[Home] getItems next', items);
+        this.clients = items;
+      },
+      error: (error) => {
+        console.error('[Home] getItems error', error);
+        this.error = 'Erro ao carregar dados. Tente novamente.';
+      },
+    });
+  }
+
+  list() {}
+
+  addItem() {
+    console.log('[Home] addItem click', {
+      cpf: this.cpf,
+      nome: this.nome,
+      telefone: this.telefone,
+    });
     if (!isValidCPFLength(this.cpf)) {
-      this.error = 'CPF deve ter 11 dígitos.';
+      console.warn('[Home] addItem validation: CPF inválido');
+      this.error = 'CPF inválido. Deve conter 11 dígitos numéricos.';
       return;
     }
     if (!isValidTelefoneLength(this.telefone)) {
-      this.error = 'Telefone deve ter 11 dígitos.';
+      console.warn('[Home] addItem validation: Telefone inválido');
+      this.error = 'Telefone inválido. Deve conter 11 dígitos numéricos.';
       return;
     }
+    console.log('[Home] addItem validation passed');
+    this.addItemAPI();
+  }
 
-    try {
-      console.log('[Home] add payload', {
+  addItemAPI() {
+    this.homeService
+      .createItem({
         cpf: this.cpf,
         nome: this.nome.trim(),
         telefone: this.telefone,
-      });
-      this.subscription.add(
-        this.homeService
-          .add({
-            cpf: this.cpf,
-            nome: this.nome.trim(),
-            telefone: this.telefone,
-          })
-          .subscribe(
-            (created) => {
-              console.log('[Home] add created', created);
-              this.clients = [...this.clients, created];
-              this.resetForm();
-            },
-            (error) => {
-              console.error('[Home] add error', error);
-              this.error = 'Erro ao salvar dados. Tente novamente.';
-            }
-          )
-      );
-    } catch (error) {
-      this.error = 'Erro ao salvar dados. Tente novamente.';
-    }
-  }
-
-  handleClear() {
-    this.resetForm();
-  }
-
-  openFilters() {
-    // Placeholder para futuros filtros; por enquanto sem ação
-  }
-
-  handleList() {
-    console.log('[Home] handleList: solicitando lista de clientes');
-    this.subscription.add(
-      this.homeService.getAll().subscribe({
-        next: (clients) => {
-          console.log('[Home] handleList next', clients);
-          this.clients = clients;
-          // mantém posição atual, mas revalida limites
-          const maxFirst = Math.max(0, this.clients.length - (this.clients.length % this.rows));
-          if (this.first >= this.clients.length) {
-            this.first = Math.min(this.first, maxFirst);
-          }
-          this.updatePaged();
+      })
+      .subscribe({
+        next: (created) => {
+          console.log('[Home] addItemAPI created', created);
+          this.clients = [...this.clients, created];
+          this.resetForm();
         },
         error: (error) => {
-          console.error('[Home] handleList error', error);
-          // Mantém dados atuais em caso de erro
+          console.error('[Home] addItemAPI error', error);
+          this.error = 'Erro ao salvar dados. Tente novamente.';
         },
-      })
-    );
-  }
-
-  startEdit(p: Client) {
-    this.error = null;
-    this.dialog.open(ClientModalComponent, {
-      data: { mode: 'edit', cliente: p },
-    });
-  }
-
-  async remove(id: number) {
-    console.log('[Home] remove: iniciando', id);
-    const prev = this.clients;
-    this.clients = this.clients.filter((p) => p.id !== id);
-    this.updatePaged();
-    this.subscription.add(
-      this.homeService.remove(id).subscribe(
-        () => {
-          console.log('[Home] remove: concluído', id);
-        },
-        (error) => {
-          console.error('[Home] remove error', error);
-          this.error = 'Erro ao remover dados. Tente novamente.';
-          this.clients = prev; // rollback se falhar
-          this.updatePaged();
-        }
-      )
-    );
-  }
-
-  view(pessoa: Client) {
-    this.dialog.open(ClientModalComponent, {
-      data: { mode: 'view', cliente: pessoa },
-    });
+      });
   }
 
   private resetForm() {
@@ -179,16 +117,5 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.nome = '';
     this.telefone = '';
     this.error = null;
-  }
-
-  // Helpers de paginação
-  private updatePaged() {
-    this.pagedClients = this.clients.slice(this.first, this.first + this.rows);
-  }
-
-  onPageChange(event: { first: number; rows: number; page: number; pageCount: number }) {
-    this.first = event.first;
-    this.rows = event.rows;
-    this.updatePaged();
   }
 }

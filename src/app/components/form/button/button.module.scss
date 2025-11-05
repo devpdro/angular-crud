@@ -25,6 +25,8 @@
 
   .icon {
     font-size: 12px;
+    line-height: 1;
+    margin: 0; // garante que o ícone não afaste a label
   }
 
   // Hover com aspecto de desabilitado (um pouco mais claro)
@@ -51,4 +53,15 @@
 .btn:disabled {
   opacity: 0.9;
   cursor: not-allowed;
+}
+
+// Ajustes gerais de ícone/label
+.btn .icon {
+  display: inline-flex;
+  align-items: center;
+  margin: 0; // sem margens extras
+}
+.btn .label {
+  display: inline-flex;
+  align-items: center;
 }

@@ -5,13 +5,15 @@
   [style.background-color]="color"
   [style.color]="textColor"
   [style.border]="border"
-  [style.gap]="label ? '0.575rem' : '0'"
-  [disabled]="disabled || loading"
+  [style.gap]="label ? '0.375rem' : '0'"
+  [disabled]="disabled"
   (click)="onClick()"
 >
-  <i class="icon" *ngIf="!loading && iconClass" [ngClass]="iconClass"></i>
-  <span class="icon" *ngIf="!loading && icon">{{ icon }}</span>
-  <i class="icon" *ngIf="loading" [ngClass]="loadingIconClass"></i>
-  <span class="label" *ngIf="!loading && label">{{ label }}</span>
-  <span class="label" *ngIf="loading">{{ loadingLabel }}</span>
+  <ng-container *ngIf="iconClass; else textIcon">
+    <i class="icon" [ngClass]="iconClass"></i>
+  </ng-container>
+  <ng-template #textIcon>
+    <span *ngIf="icon" class="icon">{{ icon }}</span>
+  </ng-template>
+  <span class="label">{{ label }}</span>
 </button>
