@@ -12,6 +12,7 @@
 body {
   font-family: 'Poppins', sans-serif;
   scroll-behavior: smooth;
+  background-color: #F9FAFB;
 }
 
 input,

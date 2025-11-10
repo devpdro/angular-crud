@@ -4,7 +4,7 @@
   <p-toast />
   <p-confirmdialog />
 
-  <div class="header mb-3">
+  <div class="header">
     <h1 class="title text-[14px] leading-[17px] font-semibold text-[#111827]">Cadastro Clientes</h1>
   </div>
 
@@ -15,7 +15,6 @@
   >
     <div class="flex items-center gap-3">
       <p-select
-        class="input w-full md:w-[280px]"
         name="filtro"
         [options]="filtros"
         optionLabel="name"
@@ -24,31 +23,23 @@
         [showClear]="true"
         [checkmark]="true"
         formControlName="filtros"
+        styleClass="w-full md:w-[280px] h-9 text-[11px]"
       />
 
-      <!-- [(ngModel)]="content" -->
       <div class="flex items-center gap-2 w-full">
         <input
-          class="w-full md:w-[280px] h-9 px-3 rounded-[8px] border border-[#E6E9EE] placeholder:text-[#6B7280] text-[11px] leading-[15px] text-[#111827] focus:border-[#10B981] focus:ring-2 focus:ring-[#10B981]"
+          class="w-full md:w-[280px] h-9 px-3 rounded-[8px] border border-[#10B981] placeholder:text-[#6B7280] text-[11px] leading-[15px] text-[#111827] focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981]"
           name="content"
           formControlName="content"
           autocomplete="off"
-          placeholder="Pesquisar..."
+          placeholder="Digite o termo de busca"
         />
-        <p-message
-          *ngIf="
-            SearchForm.controls['content'].hasError('required') &&
-            SearchForm.controls['content'].touched
-          "
-          severity="error"
-          class="!mt-1 !p-0 !m-0 !bg-transparent !border-0 !text-[11px] !text-[#EF4444]"
-          >pESQUISA ALGO</p-message
-        >
+
         <label class="sr-only" for="content">Digite o valor do filtro</label>
         <p-button
           label="Listar"
           icon="pi pi-list"
-          class="h-9 px-3 rounded-[6px] text-white leading-[15px] font-medium shadow-[0_6px_18px_rgba(17,24,39,0.06)] transition-colors inline-flex items-center justify-center gap-2"
+          class="h-9 px-3 rounded-[6px] text-white leading-[15px] font-medium shadow-[0_6px_18px_rgba(17,24,39,0.06)] transition-colors inline-flex items-center justify-center gap-2 border border-[#10B981]"
           aria-label="Listar"
           (click)="onListClick()"
           [disabled]="SearchForm.invalid || loading"
@@ -137,19 +128,21 @@
         <td class="px-3 text-[11px] leading-[15px] text-[#111827]">{{ item.id }}</td>
         <td class="px-3 text-[11px] leading-[15px] text-[#111827]">{{ formatCpf(item.cpf) }}</td>
         <td class="px-3 text-[11px] leading-[15px] text-[#111827]">{{ item.nome }}</td>
-        <td class="px-3 text-[11px] leading-[15px] text-[#111827]">{{ formatPhone(item.telefone) }}</td>
+        <td class="px-3 text-[11px] leading-[15px] text-[#111827]">
+          {{ formatPhone(item.telefone) }}
+        </td>
         <td class="px-2">
           <p-button
             icon="pi pi-pencil"
-            class="inline-flex items-center justify-center w-6 h-6 rounded-[5px] text-white text-[11px] shadow-[0_4px_10px_rgba(0,0,0,0.06)]"
+            class="inline-flex items-center justify-center w-8 h-8 rounded-[6px] text-[#EF4444] text-[9px] border border-[#EF4444] bg-transparent hover:bg-[#FFF1F2] shadow-[0_4px_10px_rgba(0,0,0,0.06)]"
             aria-label="Editar"
             (click)="editItem(item)"
           ></p-button>
           <p-button
             icon="pi pi-trash"
-            class="inline-flex items-center justify-center w-6 h-6 rounded-[5px] bg-[#EF4444] hover:brightness-90 text-white text-[11px] shadow-[0_4px_10px_rgba(0,0,0,0.06)] ml-2"
+            class="inline-flex items-center justify-center w-8 h-8 rounded-[6px] text-[#EF4444] text-[9px] border border-[#EF4444] bg-transparent hover:bg-[#FFF1F2] shadow-[0_4px_10px_rgba(0,0,0,0.06)] ml-2"
             aria-label="Excluir"
-            (click)="messageConfirmDelete(item.id)"
+            (click)="messageConfirmDelete(item)"
           ></p-button>
         </td>
       </tr>
@@ -164,14 +157,15 @@
   >
     <p-message *ngIf="error" severity="error" class="!mt-0 !mb-2" [text]="error"></p-message>
     <form [formGroup]="ClientForm" autocomplete="off" class="space-y-3">
-      <div class="flex items-center gap-3">
-        <label for="nome" class="text-[#374151] text-[11px] font-medium w-24">Nome</label>
+      <div class="flex flex-col gap-1">
+        <label for="nome" class="text-[#111827] text-[11px] font-small">Nome</label>
         <input
           pInputText
           id="nome"
           autocomplete="off"
+          placeholder="Digite o nome do cliente"
           formControlName="nome"
-          class="w-full h-9 px-3 rounded-[8px] text-[11px] leading-[15px] text-[#111827] border transition-shadow focus:outline-none"
+          class="w-full h-9 px-3 rounded-[8px] text-[11px] leading-[15px] border transition-shadow focus:outline-none placeholder:text-[#10B981] placeholder:text-[11px]"
           [ngClass]="{
             'border-[#EF4444] focus:border-[#EF4444] ring-2 ring-[#FCA5A5]':
               ClientForm.controls['nome'].invalid && ClientForm.controls['nome'].touched,
@@ -187,12 +181,15 @@
           ClientForm.controls['nome'].hasError('required') && ClientForm.controls['nome'].touched
         "
         severity="error"
-        class="!mt-1 !p-0 !m-0 !bg-transparent !border-0 !text-[11px] !text-[#EF4444]"
-        >Nome é obrigatório</p-message
-      >
+        variant="simple"
+        size="small"
+        styleClass="mt-1"
+        aria-placeholder="Digite o nome do cliente"
+        >Nome é obrigatório.
+      </p-message>
 
-      <div class="flex items-center gap-3">
-        <label for="cpf" class="text-[#374151] text-[11px] font-medium w-24">CPF</label>
+      <div class="flex flex-col gap-1">
+        <label for="cpf" class="text-[#374151] text-[11px] font-medium">CPF</label>
         <input
           pInputText
           id="cpf"
@@ -200,7 +197,8 @@
           formControlName="cpf"
           mask="000.000.000-00"
           [dropSpecialCharacters]="true"
-          class="w-full h-9 px-3 rounded-[8px] text-[11px] leading-[15px] text-[#111827] border transition-shadow focus:outline-none"
+          placeholder="Digite o CPF do cliente"
+          class="w-full h-9 px-3 rounded-[8px] text-[11px] leading-[15px] text-[#111827] border transition-shadow focus:outline-none placeholder:text-[#10B981] placeholder:text-[12px]"
           [ngClass]="{
             'border-[#EF4444] focus:border-[#EF4444] ring-2 ring-[#FCA5A5]':
               ClientForm.controls['cpf'].invalid && ClientForm.controls['cpf'].touched,
@@ -213,27 +211,26 @@
       </div>
       <p-message
         *ngIf="
-          ClientForm.controls['cpf'].hasError('required') && ClientForm.controls['cpf'].touched
+          ClientForm.controls['cpf'].touched &&
+          (ClientForm.controls['cpf'].hasError('required') ||
+            ClientForm.controls['cpf'].hasError('cpfInvalid') ||
+            ClientForm.controls['cpf'].hasError('cpfTaken'))
         "
         severity="error"
-        class="!mt-1 !p-0 !m-0 !bg-transparent !border-0 !text-[11px] !text-[#EF4444]"
-        >CPF é obrigatório</p-message
-      >
-      <p-message
-        *ngIf="ClientForm.controls['cpf'].hasError('cpfInvalid') && ClientForm.controls['cpf'].touched"
-        severity="error"
-        class="!mt-1 !p-0 !m-0 !bg-transparent !border-0 !text-[11px] !text-[#EF4444]"
-        >CPF inválido</p-message
-      >
-      <p-message
-        *ngIf="ClientForm.controls['cpf'].hasError('cpfTaken')"
-        severity="error"
-        class="!mt-1 !p-0 !m-0 !bg-transparent !border-0 !text-[11px] !text-[#EF4444]"
-        >CPF já cadastrado</p-message
-      >
+        variant="simple"
+        size="small"
+        styleClass="mt-1"
+        [text]="
+          ClientForm.controls['cpf'].hasError('required')
+            ? 'CPF é obrigatório'
+            : ClientForm.controls['cpf'].hasError('cpfInvalid')
+            ? 'CPF inválido'
+            : 'CPF já cadastrado'
+        "
+      />
 
-      <div class="flex items-center gap-3">
-        <label for="telefone" class="text-[#374151] text-[11px] font-medium w-24">Telefone</label>
+      <div class="flex flex-col gap-1">
+        <label for="telefone" class="text-[#374151] text-[11px] font-medium">Telefone</label>
         <input
           pInputText
           id="telefone"
@@ -241,7 +238,8 @@
           formControlName="telefone"
           mask="(00) 00000-0000"
           [dropSpecialCharacters]="true"
-          class="w-full h-9 px-3 rounded-[8px] text-[11px] leading-[15px] text-[#111827] border transition-shadow focus:outline-none"
+          placeholder="Digite o telefone do cliente"
+          class="w-full h-9 px-3 rounded-[8px] text-[11px] leading-[15px] text-[#111827] border transition-shadow focus:outline-none placeholder:text-[#10B981] placeholder:text-[11px]"
           [ngClass]="{
             'border-[#EF4444] focus:border-[#EF4444] ring-2 ring-[#FCA5A5]':
               ClientForm.controls['telefone'].invalid && ClientForm.controls['telefone'].touched,
@@ -254,19 +252,20 @@
       </div>
       <p-message
         *ngIf="
-          ClientForm.controls['telefone'].hasError('required') &&
-          ClientForm.controls['telefone'].touched
+          ClientForm.controls['telefone'].touched &&
+          (ClientForm.controls['telefone'].hasError('required') ||
+            ClientForm.controls['telefone'].hasError('phoneInvalid'))
         "
         severity="error"
-        class="!mt-1 !p-0 !m-0 !bg-transparent !border-0 !text-[11px] !text-[#EF4444]"
-        >Telefone é obrigatório</p-message
-      >
-      <p-message
-        *ngIf="ClientForm.controls['telefone'].hasError('phoneInvalid') && ClientForm.controls['telefone'].touched"
-        severity="error"
-        class="!mt-1 !p-0 !m-0 !bg-transparent !border-0 !text-[11px] !text-[#EF4444]"
-        >Telefone inválido</p-message
-      >
+        variant="simple"
+        size="small"
+        styleClass="mt-1"
+        [text]="
+          ClientForm.controls['telefone'].hasError('required')
+            ? 'É necessário um número de telefone.'
+            : 'Telefone inválido'
+        "
+      />
 
       <div class="flex justify-end gap-2 mt-3">
         <ng-container>

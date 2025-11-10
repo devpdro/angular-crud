@@ -1,0 +1,38 @@
+<div class="layout">
+  <header class="topbar">
+    <div class="brand">HotVet</div>
+    <div class="actions">
+      <button
+        pButton
+        type="button"
+        icon="pi pi-sign-out"
+        class="p-button-rounded p-button-text text-[#EF4444]"
+        pTooltip="Sair"
+        tooltipPosition="left"
+        (click)="logout()"
+        aria-label="Logout"
+      ></button>
+    </div>
+  </header>
+
+  <div class="content">
+    <aside class="sidebar">
+      <nav class="menu">
+        <button
+          pButton
+          type="button"
+          icon="pi pi-users"
+          class="p-button-rounded p-button-text w-8 h-8 text-[#111827] hover:text-[#10B981] flex items-center justify-center"
+          (click)="navigateToClients()"
+          pTooltip="Clientes"
+          tooltipPosition="right"
+          aria-label="Cadastro de clientes"
+        ></button>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <router-outlet />
+    </main>
+  </div>
+</div>

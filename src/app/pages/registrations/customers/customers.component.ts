@@ -23,8 +23,7 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { ConfirmDialog } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { MessageModule } from 'primeng/message';
-import { ButtonComponent } from 'src/app/components';
-import { HomeService } from 'src/app/pages/home/home.service';
+import { HomeService } from 'src/app/pages/registrations/customers/customers.service';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 
 interface filtros {
@@ -54,8 +53,8 @@ interface filtros {
     NgxMaskDirective,
   ],
   providers: [MessageService, ConfirmationService, provideNgxMask()],
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.module.scss'],
+  templateUrl: './customers.component.html',
+  styleUrls: ['./customers.module.scss'],
 })
 export class HomeComponent implements OnInit {
   ClientForm!: FormGroup;
@@ -78,6 +77,7 @@ export class HomeComponent implements OnInit {
   error: string | null = null;
   loading: boolean = false;
   saving: boolean = false;
+  lastLazyEvent: any = null;
 
   constructor(
     private homeService: HomeService,
@@ -159,6 +159,7 @@ export class HomeComponent implements OnInit {
   }
 
   loadItens($event: any) {
+    this.lastLazyEvent = $event;
     this.loading = true;
     let first = $event.first === undefined ? 0 : $event.first;
     let limit = $event.rows ?? 10;
@@ -231,14 +232,15 @@ export class HomeComponent implements OnInit {
         telefone: this.onlyDigits(this.ClientForm.get('telefone')?.value),
       })
       .subscribe({
-        next: (created) => {
-          console.log('[Home] addItemAPI created', created);
-          this.clients.data = [...(this.clients.data || []), created];
+      next: (created) => {
+          // Atualiza contagem e recarrega listagem para refletir ordenação/paginação atuais
+          this.clients.total = (this.clients.total ?? 0) + 1;
+          const fallbackEvent = { first: 0, rows: 10, sortField: 'nome', sortOrder: 1 };
           this.exibirDialogo = false;
           this.saving = false;
+          this.loadItens(this.lastLazyEvent || fallbackEvent);
         },
         error: (error) => {
-          console.error('Erro ao salvar dados', error);
           this.applyServerFieldErrors(error);
           this.error = this.getErrorMessage(error);
           this.saving = false;
@@ -255,7 +257,7 @@ export class HomeComponent implements OnInit {
         telefone: this.onlyDigits(this.ClientForm.value.telefone),
       })
       .subscribe({
-        next: (updated) => {
+        next: () => {
           this.clients.data = this.clients.data.filter(
             (item: any) => item.id != this.ClientForm.value.id
           );
@@ -265,16 +267,12 @@ export class HomeComponent implements OnInit {
             cpf: this.ClientForm.value.cpf,
             telefone: this.ClientForm.value.telefone,
           });
-          console.log('[Home] saveItem updateItem next', this.ClientForm.value);
-
-          console.log(updated);
           this.exibirDialogo = false;
           this.selectedId = null;
           this.error = null;
           this.saving = false;
         },
         error: (error) => {
-          console.error('[Home] saveItem updateItem error', error);
           this.applyServerFieldErrors(error);
           this.error = this.getErrorMessage(error);
           this.saving = false;
@@ -286,7 +284,6 @@ export class HomeComponent implements OnInit {
     this.selectedId = id;
     this.homeService.getItem(id).subscribe({
       next: (item) => {
-        console.log('[Home] viewItem next', item);
         this.ClientForm.patchValue({
           id: item.id,
           nome: item.nome,
@@ -297,18 +294,16 @@ export class HomeComponent implements OnInit {
         this.exibirDialogo = true;
       },
       error: (error) => {
-        console.error('[Home] viewItem error', error);
         this.error = 'Erro ao carregar dados. Tente novamente.';
+        return error;
       },
     });
   }
 
   editItem(item: any) {
     this.selectedId = item.id;
-    console.log(item);
     this.homeService.getItem(item.id).subscribe({
       next: (item) => {
-        console.log('[Home] editItem next', item);
         this.ClientForm.patchValue({
           id: item.id,
           nome: item.nome,
@@ -319,8 +314,8 @@ export class HomeComponent implements OnInit {
         this.exibirDialogo = true;
       },
       error: (error) => {
-        console.error('[Home] editItem error', error);
         this.error = 'Erro ao carregar dados. Tente novamente.';
+        return error;
       },
     });
   }
@@ -333,30 +328,29 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  messageConfirmDelete($event: any) {
-    console.log('[Home] confirmDeletion confirm', $event);
+  messageConfirmDelete(item: any) {
     this.confirmationService.confirm({
-      message: 'Tem certeza que deseja excluir este registro?',
+      message: `Tem certeza que deseja excluir o cliente "${item?.nome}"?`,
       header: 'Zona de perigo',
       closable: true,
       closeOnEscape: true,
       icon: 'pi pi-exclamation-triangle',
-      rejectLabel: 'Cancel',
+      rejectLabel: 'Cancelar',
       rejectButtonProps: {
-        label: 'Cancel',
+        label: 'Cancelar',
         severity: 'secondary',
         outlined: true,
       },
       acceptButtonProps: {
-        label: 'Delete',
+        label: 'Excluir',
         severity: 'danger',
       },
       accept: () => {
-        this.excludeItem($event);
+        this.excludeItem(item?.id);
         this.messageService.add({
           severity: 'info',
           summary: 'Confirmado',
-          detail: 'Item foi excluido',
+          detail: `${item?.nome} foi excluído`,
         });
       },
       reject: () => {

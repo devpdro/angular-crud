@@ -2,7 +2,7 @@
   <div class="w-full max-w-sm bg-white border-2 border-[#E5E7EB] rounded-xl shadow-sm p-5">
     <h1 class="text-[#111827] text-[14px] font-semibold mb-4">Entrar</h1>
 
-    <p-message *ngIf="error" severity="error" class="!mt-0 !mb-2" [text]="error"></p-message>
+    <p-message *ngIf="error" severity="error" variant="simple" size="small" class="!mt-0 !mb-2" [text]="error"></p-message>
 
     <form [formGroup]="LoginForm" (ngSubmit)="submitLogin()" class="space-y-3" autocomplete="off">
       <div class="flex items-center gap-3">
@@ -27,6 +27,8 @@
       <p-message
         *ngIf="(LoginForm.controls['email'].hasError('required') || LoginForm.controls['email'].hasError('email')) && LoginForm.controls['email'].touched"
         severity="error"
+        variant="simple"
+        size="small"
         class="!mt-1 !p-0 !m-0 !bg-transparent !border-0 !text-[11px] !text-[#EF4444]"
         >E-mail inválido</p-message
       >
@@ -53,12 +55,16 @@
       <p-message
         *ngIf="LoginForm.controls['password'].hasError('required') && LoginForm.controls['password'].touched"
         severity="error"
+        variant="simple"
+        size="small"
         class="!mt-1 !p-0 !m-0 !bg-transparent !border-0 !text-[11px] !text-[#EF4444]"
         >Senha é obrigatória</p-message
       >
       <p-message
         *ngIf="LoginForm.controls['password'].hasError('minlength') && LoginForm.controls['password'].touched"
         severity="error"
+        variant="simple"
+        size="small"
         class="!mt-1 !p-0 !m-0 !bg-transparent !border-0 !text-[11px] !text-[#EF4444]"
         >Mínimo de 4 caracteres</p-message
       >

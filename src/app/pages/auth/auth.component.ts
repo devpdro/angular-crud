@@ -18,9 +18,9 @@ import { Router } from '@angular/router';
     FloatLabelModule,
     MessageModule,
   ],
-  templateUrl: './login.component.html',
+  templateUrl: './auth.component.html',
 })
-export class LoginComponent {
+export class AuthComponent {
   LoginForm!: FormGroup;
   saving = false;
   error: string | null = null;
@@ -43,7 +43,7 @@ export class LoginComponent {
 
     setTimeout(() => {
       this.saving = false;
-      this.router.navigateByUrl('/');
+      this.router.navigateByUrl('/menu/home');
     }, 600);
   }
 }
