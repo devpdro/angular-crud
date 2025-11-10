@@ -211,21 +211,21 @@
       </div>
       <p-message
         *ngIf="
-          ClientForm.controls['cpf'].touched &&
-          (ClientForm.controls['cpf'].hasError('required') ||
-            ClientForm.controls['cpf'].hasError('cpfInvalid') ||
-            ClientForm.controls['cpf'].hasError('cpfTaken'))
+          ClientForm.controls['cpf'].hasError('cpfTaken') ||
+          (ClientForm.controls['cpf'].touched &&
+            (ClientForm.controls['cpf'].hasError('required') ||
+              ClientForm.controls['cpf'].hasError('cpfInvalid')))
         "
         severity="error"
         variant="simple"
         size="small"
         styleClass="mt-1"
         [text]="
-          ClientForm.controls['cpf'].hasError('required')
-            ? 'CPF é obrigatório'
-            : ClientForm.controls['cpf'].hasError('cpfInvalid')
-            ? 'CPF inválido'
-            : 'CPF já cadastrado'
+          ClientForm.controls['cpf'].hasError('cpfTaken')
+            ? 'CPF já cadastrado'
+            : (ClientForm.controls['cpf'].hasError('required')
+                ? 'CPF é obrigatório'
+                : 'CPF inválido')
         "
       />
 

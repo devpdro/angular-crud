@@ -23,7 +23,7 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { ConfirmDialog } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { MessageModule } from 'primeng/message';
-import { HomeService } from 'src/app/pages/registrations/customers/customers.service';
+import { HomeService } from 'src/app/pages/customers/customers.service';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 
 interface filtros {
@@ -120,40 +120,43 @@ export class HomeComponent implements OnInit {
     return 'Erro ao salvar dados. Tente novamente.';
   }
 
-  private onlyDigits(v: any): string {
-    return String(v ?? '').replace(/\D/g, '');
+  private onlyDigits(value: any): string {
+    return String(value ?? '').replace(/\D/g, '');
   }
 
-  formatCpf(v: any): string {
-    const d = this.onlyDigits(v).slice(0, 11);
-    if (d.length !== 11) return v ?? '';
-    return `${d.substring(0, 3)}.${d.substring(3, 6)}.${d.substring(6, 9)}-${d.substring(9, 11)}`;
+  formatCpf(value: any): string {
+    const digits = this.onlyDigits(value).slice(0, 11);
+    if (digits.length !== 11) return value ?? '';
+    return `${digits.substring(0, 3)}.${digits.substring(3, 6)}.${digits.substring(
+      6,
+      9
+    )}-${digits.substring(9, 11)}`;
   }
 
-  formatPhone(v: any): string {
-    const d = this.onlyDigits(v).slice(0, 11);
-    if (d.length === 11) {
-      return `(${d.substring(0, 2)}) ${d.substring(2, 7)}-${d.substring(7, 11)}`;
+  formatPhone(value: any): string {
+    const digits = this.onlyDigits(value).slice(0, 11);
+    if (digits.length === 11) {
+      return `(${digits.substring(0, 2)}) ${digits.substring(2, 7)}-${digits.substring(7, 11)}`;
     }
-    if (d.length === 10) {
-      return `(${d.substring(0, 2)}) ${d.substring(2, 6)}-${d.substring(6, 10)}`;
+    if (digits.length === 10) {
+      return `(${digits.substring(0, 2)}) ${digits.substring(2, 6)}-${digits.substring(6, 10)}`;
     }
-    return v ?? '';
+    return value ?? '';
   }
 
   private cpfValidator() {
     return (control: AbstractControl): ValidationErrors | null => {
-      const d = this.onlyDigits(control.value);
-      if (d.length !== 11) return { cpfInvalid: true };
-      if (/^(\d)\1{10}$/.test(d)) return { cpfInvalid: true };
+      const digits = this.onlyDigits(control.value);
+      if (digits.length !== 11) return { cpfInvalid: true };
+      if (/^(\d)\1{10}$/.test(digits)) return { cpfInvalid: true };
       return null;
     };
   }
 
   private phoneValidator() {
     return (control: AbstractControl): ValidationErrors | null => {
-      const d = this.onlyDigits(control.value);
-      if (d.length !== 10 && d.length !== 11) return { phoneInvalid: true };
+      const digits = this.onlyDigits(control.value);
+      if (digits.length !== 10 && digits.length !== 11) return { phoneInvalid: true };
       return null;
     };
   }
@@ -184,12 +187,10 @@ export class HomeComponent implements OnInit {
 
     this.homeService.getItems(page + 1, limit, orderby, direction, filterby, content).subscribe({
       next: (items) => {
-        console.log('[Home] getItems next', items);
         this.clients = Array.isArray(items) ? { data: items, total: items.length } : (items as any);
         this.loading = false;
       },
       error: (error) => {
-        console.error('[Home] getItems error', error);
         this.error = 'Erro ao carregar dados. Tente novamente.';
         this.loading = false;
       },
@@ -232,8 +233,7 @@ export class HomeComponent implements OnInit {
         telefone: this.onlyDigits(this.ClientForm.get('telefone')?.value),
       })
       .subscribe({
-      next: (created) => {
-          // Atualiza contagem e recarrega listagem para refletir ordenação/paginação atuais
+        next: () => {
           this.clients.total = (this.clients.total ?? 0) + 1;
           const fallbackEvent = { first: 0, rows: 10, sortField: 'nome', sortOrder: 1 };
           this.exibirDialogo = false;
@@ -278,26 +278,6 @@ export class HomeComponent implements OnInit {
           this.saving = false;
         },
       });
-  }
-
-  viewItem(id: number) {
-    this.selectedId = id;
-    this.homeService.getItem(id).subscribe({
-      next: (item) => {
-        this.ClientForm.patchValue({
-          id: item.id,
-          nome: item.nome,
-          cpf: item.cpf,
-          telefone: item.telefone,
-        });
-        this.ClientForm.disable({ emitEvent: false });
-        this.exibirDialogo = true;
-      },
-      error: (error) => {
-        this.error = 'Erro ao carregar dados. Tente novamente.';
-        return error;
-      },
-    });
   }
 
   editItem(item: any) {
@@ -366,13 +346,12 @@ export class HomeComponent implements OnInit {
   excludeItem(id: number) {
     this.homeService.deleteItem(id).subscribe({
       next: () => {
-        console.log('[Home] excludeItem next', id);
         this.clients.data = (this.clients.data || []).filter((client: any) => client.id !== id);
         this.clients.total = Math.max(0, (this.clients.total ?? 0) - 1);
       },
       error: (error) => {
-        console.error('[Home] excludeItem error', error);
         this.error = 'Erro ao excluir dados. Tente novamente.';
+        return error;
       },
     });
   }

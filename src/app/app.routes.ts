@@ -4,27 +4,33 @@ import { authGuard } from './auth-guard';
 
 export const routes: Routes = [
   {
-    path: 'login',
+    path: '',
     loadComponent: () => import('src/app/pages/auth/auth.component').then((m) => m.AuthComponent),
     title: 'Login',
   },
   {
-    path: '',
+    path: 'menu',
     loadComponent: () => import('src/app/pages/menu/menu.component').then((m) => m.MenuComponent),
     title: 'Dashboard',
     children: [
       {
-        path: '',
-        redirectTo: 'home',
+        path: 'menu',
+        redirectTo: 'clientes',
         pathMatch: 'full',
       },
       {
-        path: 'home',
+        path: 'clientes',
         loadComponent: () =>
-          import('src/app/pages/registrations/customers/customers.component').then(
-            (m) => m.HomeComponent
-          ),
+          import('src/app/pages/customers/customers.component').then((m) => m.HomeComponent),
         title: 'Clientes',
+      },
+      {
+        path: 'novo',
+        loadComponent: () =>
+          import('src/app/pages/registration/registration.component').then(
+            (m) => m.RegistrationComponent
+          ),
+        title: 'Novo Cliente',
       },
     ],
   },

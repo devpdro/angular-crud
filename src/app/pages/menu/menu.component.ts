@@ -14,13 +14,7 @@ import { TooltipModule } from 'primeng/tooltip';
 export class MenuComponent {
   constructor(private router: Router) {}
 
-  navigateToClients() {
-    // Navega para clientes dentro do layout do menu
-    this.router.navigate(['/menu/home']);
-  }
-
   logout() {
-    // Aqui podemos limpar tokens/sessão se necessário e navegar para login
-    this.router.navigate(['/']);
+    this.router.navigate(['/login']);
   }
 }
