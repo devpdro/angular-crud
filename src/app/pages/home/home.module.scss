@@ -37,12 +37,28 @@
     padding: 0.375rem 0.775rem 0.875rem 0.775rem;
     gap: 20px;
 
-    label {
+    .select-btn {
+      padding: 0.575rem;
+    }
+
+    .input {
+      width: 255px;
+      padding: 0.5rem;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 400;
+      height: 35px;
+      color: #111827;
+      border: 2px solid #e5e7eb;
+    }
+
+    .label {
       display: inline-flex;
       align-items: center;
       color: #4b5563;
       gap: 4px;
-      margin-bottom: 5px;
+      padding: 0.5rem;
+      padding-bottom: 40px;
       font-size: 11px;
       font-weight: 400;
     }

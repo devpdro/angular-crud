@@ -1,0 +1,72 @@
+<div class="min-h-screen flex items-center justify-center bg-[#F3F4F6] p-4">
+  <div class="w-full max-w-sm bg-white border-2 border-[#E5E7EB] rounded-xl shadow-sm p-5">
+    <h1 class="text-[#111827] text-[14px] font-semibold mb-4">Entrar</h1>
+
+    <p-message *ngIf="error" severity="error" class="!mt-0 !mb-2" [text]="error"></p-message>
+
+    <form [formGroup]="LoginForm" (ngSubmit)="submitLogin()" class="space-y-3" autocomplete="off">
+      <div class="flex items-center gap-3">
+        <label for="email" class="text-[#374151] text-[11px] font-medium w-24">E-mail</label>
+        <input
+          pInputText
+          id="email"
+          type="email"
+          autocomplete="off"
+          formControlName="email"
+          class="w-full h-9 px-3 rounded-[8px] text-[11px] leading-[15px] text-[#111827] border transition-shadow focus:outline-none"
+          [ngClass]="{
+            'border-[#EF4444] focus:border-[#EF4444] ring-2 ring-[#FCA5A5]':
+              LoginForm.controls['email'].invalid && LoginForm.controls['email'].touched,
+            'border-[#10B981] focus:border-[#10B981] ring-2 ring-[#A7F3D0]':
+              LoginForm.controls['email'].valid && LoginForm.controls['email'].touched,
+            'border-[#E6E9EE] focus:border-[#F79E0B] focus:ring-2 focus:ring-[#F79E0B]':
+              !LoginForm.controls['email'].touched
+          }"
+        />
+      </div>
+      <p-message
+        *ngIf="(LoginForm.controls['email'].hasError('required') || LoginForm.controls['email'].hasError('email')) && LoginForm.controls['email'].touched"
+        severity="error"
+        class="!mt-1 !p-0 !m-0 !bg-transparent !border-0 !text-[11px] !text-[#EF4444]"
+        >E-mail inválido</p-message
+      >
+
+      <div class="flex items-center gap-3">
+        <label for="password" class="text-[#374151] text-[11px] font-medium w-24">Senha</label>
+        <input
+          pInputText
+          id="password"
+          type="password"
+          autocomplete="off"
+          formControlName="password"
+          class="w-full h-9 px-3 rounded-[8px] text-[11px] leading-[15px] text-[#111827] border transition-shadow focus:outline-none"
+          [ngClass]="{
+            'border-[#EF4444] focus:border-[#EF4444] ring-2 ring-[#FCA5A5]':
+              LoginForm.controls['password'].invalid && LoginForm.controls['password'].touched,
+            'border-[#10B981] focus:border-[#10B981] ring-2 ring-[#A7F3D0]':
+              LoginForm.controls['password'].valid && LoginForm.controls['password'].touched,
+            'border-[#E6E9EE] focus:border-[#F79E0B] focus:ring-2 focus:ring-[#F79E0B]':
+              !LoginForm.controls['password'].touched
+          }"
+        />
+      </div>
+      <p-message
+        *ngIf="LoginForm.controls['password'].hasError('required') && LoginForm.controls['password'].touched"
+        severity="error"
+        class="!mt-1 !p-0 !m-0 !bg-transparent !border-0 !text-[11px] !text-[#EF4444]"
+        >Senha é obrigatória</p-message
+      >
+      <p-message
+        *ngIf="LoginForm.controls['password'].hasError('minlength') && LoginForm.controls['password'].touched"
+        severity="error"
+        class="!mt-1 !p-0 !m-0 !bg-transparent !border-0 !text-[11px] !text-[#EF4444]"
+        >Mínimo de 4 caracteres</p-message
+      >
+
+      <div class="flex justify-end gap-2 mt-3">
+        <p-button label="Login" type="submit" [disabled]="LoginForm.invalid || saving"></p-button>
+      </div>
+      <div class="text-[11px] text-[#6B7280]" *ngIf="saving">Entrando...</div>
+    </form>
+  </div>
+</div>

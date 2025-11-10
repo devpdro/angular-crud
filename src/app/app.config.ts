@@ -13,7 +13,8 @@ import { provideNgxMask } from 'ngx-mask';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideRouter(routes), provideClientHydration(),
+    provideRouter(routes),
+    provideClientHydration(),
     provideHttpClient(withFetch()),
     provideNgxMask(),
     provideAnimationsAsync(),
@@ -21,9 +22,9 @@ export const appConfig: ApplicationConfig = {
       theme: {
         preset: Aura,
         options: {
-          darkModeSelector: '.app-dark'
-        }
-      }
-    })
-  ]
+          darkModeSelector: '.app-dark',
+        },
+      },
+    }),
+  ],
 };

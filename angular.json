@@ -34,14 +34,8 @@
                 "output": "primeicons"
               }
             ],
-            "styles": [
-              "src/app/styles/global.scss"
-            ],
-            "server": "src/main.server.ts",
-            "outputMode": "server",
-            "ssr": {
-              "entry": "src/server.ts"
-            }
+            "styles": ["./src/app/styles/global.css"],
+            "outputMode": "static"
           },
           "configurations": {
             "production": {
@@ -90,16 +84,14 @@
           "options": {
             "tsConfig": "tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
+            "postcssConfiguration": "postcss.config.js",
             "assets": [
               {
                 "glob": "**/*",
                 "input": "public"
               }
             ],
-            "styles": [
-              "primeicons/primeicons.css",
-              "src/app/styles/global.scss"
-            ]
+            "styles": ["primeicons/primeicons.css", "src/app/styles/global.css"]
           }
         }
       }

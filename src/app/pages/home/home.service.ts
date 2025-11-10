@@ -23,12 +23,23 @@ export class HomeService {
     limit: number,
     orderby: any,
     direction: any,
+    filterby: any,
     content: any
   ): Observable<Client[]> {
     return this.http.get<Client[]>(
-      `${this.apiUrl}?page=${page}&limit=${limit}&orderby=${orderby}&direction=${direction}&content=${content}`
+      `${this.apiUrl}?page=${page}&limit=${limit}&orderby=${orderby}&direction=${direction}&filterby=${filterby}&content=${content}`
     );
   }
 
-  list() {}
+  getItem(id: number): Observable<Client> {
+    return this.http.get<Client>(`${this.apiUrl}/${id}`);
+  }
+
+  updateItem(id: number, item: Omit<Client, 'id'>): Observable<Client> {
+    return this.http.put<Client>(`${this.apiUrl}/${id}`, item);
+  }
+
+  deleteItem(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
 }
