@@ -14,7 +14,11 @@ import { TooltipModule } from 'primeng/tooltip';
 export class MenuComponent {
   constructor(private router: Router) {}
 
+  navigateToClients() {
+    this.router.navigate(['/menu/clientes']);
+  }
+
   logout() {
-    this.router.navigate(['/login']);
+    this.router.navigate(['/']);
   }
 }

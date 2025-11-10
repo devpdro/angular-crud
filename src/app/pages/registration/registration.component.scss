@@ -1,0 +1,55 @@
+.container {
+  max-width: 1280px;
+  margin: 32px auto;
+  padding: 16px 20px;
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f9fafb;
+    border: 2px solid #e5e7eb;
+    border-radius: 10px 10px 0 0;
+    padding: 0.475rem 0.775rem;
+
+    .title {
+      color: #111827;
+      font-size: 14px;
+      line-height: 17px;
+      font-weight: 600;
+    }
+  }
+
+  .form {
+    background-color: #f9fafb;
+    border-left: 2px solid #e5e7eb;
+    border-right: 2px solid #e5e7eb;
+    border-bottom: 2px solid #e5e7eb;
+    border-radius: 0 0 10px 10px;
+    margin-bottom: 1.575rem;
+    padding: 0.975rem 0.775rem 0.975rem 0.775rem;
+
+    input {
+      border: 2px solid #10b981;
+    }
+  }
+}
+
+:host ::ng-deep .p-table .p-table-loading-overlay {
+  background-color: transparent !important;
+}
+:host ::ng-deep .p-table .p-table-loading-icon {
+  color: #10b981 !important;
+}
+
+:host ::ng-deep .p-datatable .p-datatable-loading-overlay {
+  background-color: transparent !important;
+}
+:host ::ng-deep .p-datatable .p-datatable-loading-icon {
+  color: #10b981 !important;
+}
+
+/* Suaviza a máscara dos diálogos para evitar tela preta intensa */
+:host ::ng-deep .p-dialog-mask {
+  background-color: rgba(17, 24, 39, 0.12) !important;
+}

@@ -24,7 +24,6 @@ import { ConfirmDialog } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { MessageModule } from 'primeng/message';
 import { HomeService } from 'src/app/pages/customers/customers.service';
-import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 
 interface filtros {
   name: string;
@@ -50,9 +49,8 @@ interface filtros {
     MessageModule,
     ToastModule,
     ConfirmDialog,
-    NgxMaskDirective,
   ],
-  providers: [MessageService, ConfirmationService, provideNgxMask()],
+  providers: [MessageService, ConfirmationService],
   templateUrl: './customers.component.html',
   styleUrls: ['./customers.module.scss'],
 })

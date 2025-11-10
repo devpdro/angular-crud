@@ -48,16 +48,14 @@
     </div>
 
     <div class="footer mt-2 flex justify-end">
-      <button
-        type="button"
+      <a
         pButton
-        form="ClientForm"
         label="Adicionar"
-        (click)="addItem()"
         icon="pi pi-plus"
         class="h-8 px-3 rounded-[6px] text-white text-[11px] leading-[15px] font-medium shadow-[0_6px_18px_rgba(17,24,39,0.06)] transition-colors inline-flex items-center justify-center gap-2"
         aria-label="Adicionar"
-      ></button>
+        routerLink="/menu/clientes/novo"
+      ></a>
     </div>
   </form>
 
@@ -149,130 +147,5 @@
     </ng-template>
   </p-table>
 
-  <p-dialog
-    [header]="ClientForm.controls['id'].value === 0 ? 'Adicionar Cliente' : 'Editar Cliente'"
-    [(visible)]="exibirDialogo"
-    [modal]="true"
-    [style]="{ width: '25rem' }"
-  >
-    <p-message *ngIf="error" severity="error" class="!mt-0 !mb-2" [text]="error"></p-message>
-    <form [formGroup]="ClientForm" autocomplete="off" class="space-y-3">
-      <div class="flex flex-col gap-1">
-        <label for="nome" class="text-[#111827] text-[11px] font-small">Nome</label>
-        <input
-          pInputText
-          id="nome"
-          autocomplete="off"
-          placeholder="Digite o nome do cliente"
-          formControlName="nome"
-          class="w-full h-9 px-3 rounded-[8px] text-[11px] leading-[15px] border transition-shadow focus:outline-none placeholder:text-[#10B981] placeholder:text-[11px]"
-          [ngClass]="{
-            'border-[#EF4444] focus:border-[#EF4444] ring-2 ring-[#FCA5A5]':
-              ClientForm.controls['nome'].invalid && ClientForm.controls['nome'].touched,
-            'border-[#10B981] focus:border-[#10B981] ring-2 ring-[#A7F3D0]':
-              ClientForm.controls['nome'].valid && ClientForm.controls['nome'].touched,
-            'border-[#E6E9EE] focus:border-[#F79E0B] focus:ring-2 focus:ring-[#F79E0B]':
-              !ClientForm.controls['nome'].touched
-          }"
-        />
-      </div>
-      <p-message
-        *ngIf="
-          ClientForm.controls['nome'].hasError('required') && ClientForm.controls['nome'].touched
-        "
-        severity="error"
-        variant="simple"
-        size="small"
-        styleClass="mt-1"
-        aria-placeholder="Digite o nome do cliente"
-        >Nome é obrigatório.
-      </p-message>
-
-      <div class="flex flex-col gap-1">
-        <label for="cpf" class="text-[#374151] text-[11px] font-medium">CPF</label>
-        <input
-          pInputText
-          id="cpf"
-          autocomplete="off"
-          formControlName="cpf"
-          mask="000.000.000-00"
-          [dropSpecialCharacters]="true"
-          placeholder="Digite o CPF do cliente"
-          class="w-full h-9 px-3 rounded-[8px] text-[11px] leading-[15px] text-[#111827] border transition-shadow focus:outline-none placeholder:text-[#10B981] placeholder:text-[12px]"
-          [ngClass]="{
-            'border-[#EF4444] focus:border-[#EF4444] ring-2 ring-[#FCA5A5]':
-              ClientForm.controls['cpf'].invalid && ClientForm.controls['cpf'].touched,
-            'border-[#10B981] focus:border-[#10B981] ring-2 ring-[#A7F3D0]':
-              ClientForm.controls['cpf'].valid && ClientForm.controls['cpf'].touched,
-            'border-[#E6E9EE] focus:border-[#F79E0B] focus:ring-2 focus:ring-[#F79E0B]':
-              !ClientForm.controls['cpf'].touched
-          }"
-        />
-      </div>
-      <p-message
-        *ngIf="
-          ClientForm.controls['cpf'].hasError('cpfTaken') ||
-          (ClientForm.controls['cpf'].touched &&
-            (ClientForm.controls['cpf'].hasError('required') ||
-              ClientForm.controls['cpf'].hasError('cpfInvalid')))
-        "
-        severity="error"
-        variant="simple"
-        size="small"
-        styleClass="mt-1"
-        [text]="
-          ClientForm.controls['cpf'].hasError('cpfTaken')
-            ? 'CPF já cadastrado'
-            : (ClientForm.controls['cpf'].hasError('required')
-                ? 'CPF é obrigatório'
-                : 'CPF inválido')
-        "
-      />
-
-      <div class="flex flex-col gap-1">
-        <label for="telefone" class="text-[#374151] text-[11px] font-medium">Telefone</label>
-        <input
-          pInputText
-          id="telefone"
-          autocomplete="off"
-          formControlName="telefone"
-          mask="(00) 00000-0000"
-          [dropSpecialCharacters]="true"
-          placeholder="Digite o telefone do cliente"
-          class="w-full h-9 px-3 rounded-[8px] text-[11px] leading-[15px] text-[#111827] border transition-shadow focus:outline-none placeholder:text-[#10B981] placeholder:text-[11px]"
-          [ngClass]="{
-            'border-[#EF4444] focus:border-[#EF4444] ring-2 ring-[#FCA5A5]':
-              ClientForm.controls['telefone'].invalid && ClientForm.controls['telefone'].touched,
-            'border-[#10B981] focus:border-[#10B981] ring-2 ring-[#A7F3D0]':
-              ClientForm.controls['telefone'].valid && ClientForm.controls['telefone'].touched,
-            'border-[#E6E9EE] focus:border-[#F79E0B] focus:ring-2 focus:ring-[#F79E0B]':
-              !ClientForm.controls['telefone'].touched
-          }"
-        />
-      </div>
-      <p-message
-        *ngIf="
-          ClientForm.controls['telefone'].touched &&
-          (ClientForm.controls['telefone'].hasError('required') ||
-            ClientForm.controls['telefone'].hasError('phoneInvalid'))
-        "
-        severity="error"
-        variant="simple"
-        size="small"
-        styleClass="mt-1"
-        [text]="
-          ClientForm.controls['telefone'].hasError('required')
-            ? 'É necessário um número de telefone.'
-            : 'Telefone inválido'
-        "
-      />
-
-      <div class="flex justify-end gap-2 mt-3">
-        <ng-container>
-          <p-button label="Cancelar" (click)="exibirDialogo = false" />
-          <p-button label="Salvar" (click)="saveItem()" [disabled]="ClientForm.invalid || saving" />
-        </ng-container>
-      </div>
-    </form>
-  </p-dialog>
+  <!-- Diálogo de edição removido para cadastro via rota -->
 </div>

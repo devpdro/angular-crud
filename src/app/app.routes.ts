@@ -14,23 +14,28 @@ export const routes: Routes = [
     title: 'Dashboard',
     children: [
       {
-        path: 'menu',
+        path: '',
         redirectTo: 'clientes',
         pathMatch: 'full',
       },
       {
         path: 'clientes',
-        loadComponent: () =>
-          import('src/app/pages/customers/customers.component').then((m) => m.HomeComponent),
-        title: 'Clientes',
-      },
-      {
-        path: 'novo',
-        loadComponent: () =>
-          import('src/app/pages/registration/registration.component').then(
-            (m) => m.RegistrationComponent
-          ),
-        title: 'Novo Cliente',
+        children: [
+          {
+            path: '',
+            loadComponent: () =>
+              import('src/app/pages/customers/customers.component').then((m) => m.HomeComponent),
+            title: 'Clientes',
+          },
+          {
+            path: 'novo',
+            loadComponent: () =>
+              import('src/app/pages/registration/registration.component').then(
+                (m) => m.RegistrationComponent
+              ),
+            title: 'Novo Cliente',
+          },
+        ],
       },
     ],
   },
