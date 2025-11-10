@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import {
@@ -8,19 +9,14 @@ import {
   FormControl,
   Validators,
   ReactiveFormsModule,
-  AbstractControl,
-  ValidationErrors,
 } from '@angular/forms';
 import { PaginatorModule } from 'primeng/paginator';
 import { TableModule } from 'primeng/table';
-import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { SelectModule } from 'primeng/select';
 import { InputTextModule } from 'primeng/inputtext';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TooltipModule } from 'primeng/tooltip';
-import { FloatLabelModule } from 'primeng/floatlabel';
-import { ConfirmDialog } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { MessageModule } from 'primeng/message';
 import { HomeService } from 'src/app/pages/customers/customers.service';
@@ -37,7 +33,6 @@ interface filtros {
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    DialogModule,
     PaginatorModule,
     TableModule,
     ButtonModule,
@@ -45,27 +40,20 @@ interface filtros {
     InputTextModule,
     ConfirmDialogModule,
     TooltipModule,
-    FloatLabelModule,
     MessageModule,
     ToastModule,
-    ConfirmDialog,
+    RouterModule,
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './customers.component.html',
   styleUrls: ['./customers.module.scss'],
 })
 export class HomeComponent implements OnInit {
-  ClientForm!: FormGroup;
   SearchForm!: FormGroup;
 
   mensagemConfirmacao: boolean = true;
   mensagemSucesso: boolean = false;
-  exibirDialogo: boolean = false;
-  selectedId: number | null = null;
   selectedRow: any | null = null;
-  cpf: string = '';
-  nome: string = '';
-  telefone: string = '';
   content: any = '';
   mensagem: string = '';
 
@@ -90,32 +78,10 @@ export class HomeComponent implements OnInit {
       { name: 'Cpf', code: 'cpf' },
       { name: 'Telefone', code: 'telefone' },
     ];
-    this.ClientForm = this.fb.group({
-      id: new FormControl(0),
-      nome: new FormControl('', [Validators.required]),
-      cpf: new FormControl('', [Validators.required, this.cpfValidator()]),
-      telefone: new FormControl('', [Validators.required, this.phoneValidator()]),
-    });
     this.SearchForm = this.fb.group({
       filtros: new FormControl('', [Validators.required]),
       content: new FormControl('', [Validators.required]),
     });
-  }
-
-  private getErrorMessage(error: any): string {
-    const e = error?.error;
-    const errs = e?.errors || e;
-    const cpfMsg = errs?.cpf?.[0] || errs?.cpf;
-    const nomeMsg = errs?.nome?.[0] || errs?.nome;
-    const telMsg = errs?.telefone?.[0] || errs?.telefone;
-
-    if (cpfMsg) return 'CPF já cadastrado';
-    if (nomeMsg) return typeof nomeMsg === 'string' ? nomeMsg : 'Nome inválido';
-    if (telMsg) return typeof telMsg === 'string' ? telMsg : 'Telefone inválido';
-
-    if (typeof e?.message === 'string' && e.message.trim()) return e.message;
-    if (typeof error?.message === 'string' && error.message.trim()) return 'Erro ao salvar dados.';
-    return 'Erro ao salvar dados. Tente novamente.';
   }
 
   private onlyDigits(value: any): string {
@@ -142,22 +108,6 @@ export class HomeComponent implements OnInit {
     return value ?? '';
   }
 
-  private cpfValidator() {
-    return (control: AbstractControl): ValidationErrors | null => {
-      const digits = this.onlyDigits(control.value);
-      if (digits.length !== 11) return { cpfInvalid: true };
-      if (/^(\d)\1{10}$/.test(digits)) return { cpfInvalid: true };
-      return null;
-    };
-  }
-
-  private phoneValidator() {
-    return (control: AbstractControl): ValidationErrors | null => {
-      const digits = this.onlyDigits(control.value);
-      if (digits.length !== 10 && digits.length !== 11) return { phoneInvalid: true };
-      return null;
-    };
-  }
 
   loadItens($event: any) {
     this.lastLazyEvent = $event;
@@ -190,6 +140,7 @@ export class HomeComponent implements OnInit {
       },
       error: (error) => {
         this.error = 'Erro ao carregar dados. Tente novamente.';
+        console.error('Erro ao carregar dados:', error);
         this.loading = false;
       },
     });
@@ -207,103 +158,6 @@ export class HomeComponent implements OnInit {
     };
 
     this.loadItens(event);
-  }
-
-  addItem() {
-    this.ClientForm.patchValue({
-      id: 0,
-      nome: '',
-      cpf: '',
-      telefone: '',
-    });
-    this.ClientForm.markAsPristine();
-    this.ClientForm.markAsUntouched();
-    this.error = null;
-    this.exibirDialogo = true;
-  }
-
-  addItemAPI() {
-    this.saving = true;
-    this.homeService
-      .createItem({
-        cpf: this.onlyDigits(this.ClientForm.get('cpf')?.value),
-        nome: this.ClientForm.get('nome')?.value.trim(),
-        telefone: this.onlyDigits(this.ClientForm.get('telefone')?.value),
-      })
-      .subscribe({
-        next: () => {
-          this.clients.total = (this.clients.total ?? 0) + 1;
-          const fallbackEvent = { first: 0, rows: 10, sortField: 'nome', sortOrder: 1 };
-          this.exibirDialogo = false;
-          this.saving = false;
-          this.loadItens(this.lastLazyEvent || fallbackEvent);
-        },
-        error: (error) => {
-          this.applyServerFieldErrors(error);
-          this.error = this.getErrorMessage(error);
-          this.saving = false;
-        },
-      });
-  }
-
-  updateItemAPI() {
-    this.saving = true;
-    this.homeService
-      .updateItem(this.ClientForm.value.id, {
-        nome: this.ClientForm.value.nome,
-        cpf: this.onlyDigits(this.ClientForm.value.cpf),
-        telefone: this.onlyDigits(this.ClientForm.value.telefone),
-      })
-      .subscribe({
-        next: () => {
-          this.clients.data = this.clients.data.filter(
-            (item: any) => item.id != this.ClientForm.value.id
-          );
-          this.clients.data.unshift({
-            id: this.ClientForm.value.id,
-            nome: this.ClientForm.value.nome,
-            cpf: this.ClientForm.value.cpf,
-            telefone: this.ClientForm.value.telefone,
-          });
-          this.exibirDialogo = false;
-          this.selectedId = null;
-          this.error = null;
-          this.saving = false;
-        },
-        error: (error) => {
-          this.applyServerFieldErrors(error);
-          this.error = this.getErrorMessage(error);
-          this.saving = false;
-        },
-      });
-  }
-
-  editItem(item: any) {
-    this.selectedId = item.id;
-    this.homeService.getItem(item.id).subscribe({
-      next: (item) => {
-        this.ClientForm.patchValue({
-          id: item.id,
-          nome: item.nome,
-          cpf: item.cpf,
-          telefone: item.telefone,
-        });
-        this.ClientForm.enable({ emitEvent: false });
-        this.exibirDialogo = true;
-      },
-      error: (error) => {
-        this.error = 'Erro ao carregar dados. Tente novamente.';
-        return error;
-      },
-    });
-  }
-
-  saveItem() {
-    if (this.ClientForm.get('id')?.value === 0) {
-      this.addItemAPI();
-    } else {
-      this.updateItemAPI();
-    }
   }
 
   messageConfirmDelete(item: any) {
@@ -351,26 +205,6 @@ export class HomeComponent implements OnInit {
         this.error = 'Erro ao excluir dados. Tente novamente.';
         return error;
       },
-    });
-  }
-
-  private applyServerFieldErrors(error: any) {
-    const errors = error?.error?.errors;
-    if (!errors || typeof errors !== 'object') return;
-
-    const map: Record<string, string> = {
-      cpf: 'cpfTaken',
-      nome: 'nomeServer',
-      telefone: 'telefoneServer',
-    };
-
-    Object.keys(errors).forEach((field) => {
-      const control = this.ClientForm.get(field);
-      if (!control) return;
-      const current = control.errors || {};
-      const key = map[field] || 'server';
-      control.setErrors({ ...current, [key]: true });
-      control.markAsTouched();
     });
   }
 }

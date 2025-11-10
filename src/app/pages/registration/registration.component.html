@@ -4,6 +4,14 @@
   </div>
 
   <form [formGroup]="RegistrationForm" autocomplete="off" class="form flex flex-col gap-4">
+    <p-message
+      *ngIf="error"
+      severity="error"
+      variant="simple"
+      size="small"
+      styleClass="mb-2"
+      [text]="error"
+    />
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
       <div class="flex flex-col gap-1">
         <label for="nome" class="text-[#374151] text-[11px] font-medium">Nome</label>
@@ -15,18 +23,26 @@
           formControlName="nome"
           class="h-9 px-3 rounded-[8px] border placeholder:text-[#6B7280] text-[11px] leading-[15px] text-[#111827] focus:ring-1"
           [ngClass]="{
-            'border-[#EF4444] focus:border-[#EF4444] ring-[#FCA5A5]': RegistrationForm.controls['nome'].invalid && RegistrationForm.controls['nome'].touched,
-            'border-[#10B981] focus:border-[#10B981] ring-[#A7F3D0]': RegistrationForm.controls['nome'].valid && RegistrationForm.controls['nome'].touched,
-            'border-[#E6E9EE] focus:border-[#F79E0B] focus:ring-[#F79E0B]': !RegistrationForm.controls['nome'].touched
+            'border-[#EF4444] focus:border-[#EF4444] ring-[#FCA5A5]':
+              RegistrationForm.controls['nome'].invalid &&
+              RegistrationForm.controls['nome'].touched,
+            'border-[#10B981] focus:border-[#10B981] ring-[#A7F3D0]':
+              RegistrationForm.controls['nome'].valid && RegistrationForm.controls['nome'].touched,
+            'border-[#E6E9EE] focus:border-[#F79E0B] focus:ring-[#F79E0B]':
+              !RegistrationForm.controls['nome'].touched
           }"
         />
         <p-message
-          *ngIf="RegistrationForm.controls['nome'].hasError('required') && RegistrationForm.controls['nome'].touched"
+          *ngIf="
+            RegistrationForm.controls['nome'].hasError('required') &&
+            RegistrationForm.controls['nome'].touched
+          "
           severity="error"
           variant="simple"
           size="small"
           styleClass="mt-1"
-          >Nome é obrigatório.</p-message>
+          >Nome é obrigatório.</p-message
+        >
       </div>
 
       <!-- CPF -->
@@ -42,18 +58,29 @@
           mask="000.000.000-00"
           [dropSpecialCharacters]="true"
           [ngClass]="{
-            'border-[#EF4444] focus:border-[#EF4444] ring-[#FCA5A5]': RegistrationForm.controls['cpf'].invalid && RegistrationForm.controls['cpf'].touched,
-            'border-[#10B981] focus:border-[#10B981] ring-[#A7F3D0]': RegistrationForm.controls['cpf'].valid && RegistrationForm.controls['cpf'].touched,
-            'border-[#E6E9EE] focus:border-[#F79E0B] focus:ring-[#F79E0B]': !RegistrationForm.controls['cpf'].touched
+            'border-[#EF4444] focus:border-[#EF4444] ring-[#FCA5A5]':
+              RegistrationForm.controls['cpf'].invalid && RegistrationForm.controls['cpf'].touched,
+            'border-[#10B981] focus:border-[#10B981] ring-[#A7F3D0]':
+              RegistrationForm.controls['cpf'].valid && RegistrationForm.controls['cpf'].touched,
+            'border-[#E6E9EE] focus:border-[#F79E0B] focus:ring-[#F79E0B]':
+              !RegistrationForm.controls['cpf'].touched
           }"
         />
         <p-message
-          *ngIf="RegistrationForm.controls['cpf'].touched && (RegistrationForm.controls['cpf'].hasError('required') || RegistrationForm.controls['cpf'].hasError('cpfInvalid'))"
+          *ngIf="
+            RegistrationForm.controls['cpf'].touched &&
+            (RegistrationForm.controls['cpf'].hasError('required') ||
+              RegistrationForm.controls['cpf'].hasError('cpfInvalid'))
+          "
           severity="error"
           variant="simple"
           size="small"
           styleClass="mt-1"
-          [text]="RegistrationForm.controls['cpf'].hasError('required') ? 'CPF é obrigatório' : 'CPF inválido'"
+          [text]="
+            RegistrationForm.controls['cpf'].hasError('required')
+              ? 'CPF é obrigatório'
+              : 'CPF inválido'
+          "
         />
       </div>
 
@@ -70,18 +97,31 @@
           mask="(00) 00000-0000"
           [dropSpecialCharacters]="true"
           [ngClass]="{
-            'border-[#EF4444] focus:border-[#EF4444] ring-[#FCA5A5]': RegistrationForm.controls['telefone'].invalid && RegistrationForm.controls['telefone'].touched,
-            'border-[#10B981] focus:border-[#10B981] ring-[#A7F3D0]': RegistrationForm.controls['telefone'].valid && RegistrationForm.controls['telefone'].touched,
-            'border-[#E6E9EE] focus:border-[#F79E0B] focus:ring-[#F79E0B]': !RegistrationForm.controls['telefone'].touched
+            'border-[#EF4444] focus:border-[#EF4444] ring-[#FCA5A5]':
+              RegistrationForm.controls['telefone'].invalid &&
+              RegistrationForm.controls['telefone'].touched,
+            'border-[#10B981] focus:border-[#10B981] ring-[#A7F3D0]':
+              RegistrationForm.controls['telefone'].valid &&
+              RegistrationForm.controls['telefone'].touched,
+            'border-[#E6E9EE] focus:border-[#F79E0B] focus:ring-[#F79E0B]':
+              !RegistrationForm.controls['telefone'].touched
           }"
         />
         <p-message
-          *ngIf="RegistrationForm.controls['telefone'].touched && (RegistrationForm.controls['telefone'].hasError('required') || RegistrationForm.controls['telefone'].hasError('phoneInvalid'))"
+          *ngIf="
+            RegistrationForm.controls['telefone'].touched &&
+            (RegistrationForm.controls['telefone'].hasError('required') ||
+              RegistrationForm.controls['telefone'].hasError('phoneInvalid'))
+          "
           severity="error"
           variant="simple"
           size="small"
           styleClass="mt-1"
-          [text]="RegistrationForm.controls['telefone'].hasError('required') ? 'É necessário um número de telefone.' : 'Telefone inválido'"
+          [text]="
+            RegistrationForm.controls['telefone'].hasError('required')
+              ? 'É necessário um número de telefone.'
+              : 'Telefone inválido'
+          "
         />
       </div>
     </div>
@@ -99,7 +139,8 @@
         icon="pi pi-check"
         class="h-8 px-3 rounded-[6px] text-white text-[11px] leading-[15px] font-medium shadow-[0_6px_18px_rgba(17,24,39,0.06)] transition-colors inline-flex items-center justify-center gap-2 bg-[#10B981] hover:bg-[#059669]"
         aria-label="Salvar"
-        [disabled]="RegistrationForm.invalid"
+        [disabled]="RegistrationForm.invalid || saving"
+        (click)="onSave()"
       >
         Salvar
       </button>

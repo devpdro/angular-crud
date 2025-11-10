@@ -11,7 +11,7 @@
       [text]="error"
     ></p-message>
 
-    <form [formGroup]="LoginForm" class="space-y-3" autocomplete="off">
+    <form [formGroup]="LoginForm" class="space-y-3" autocomplete="off" (ngSubmit)="onSubmit()">
       <div class="flex flex-col gap-1">
         <label for="email" class="text-[#374151] text-[11px] font-medium">E-mail</label>
         <input

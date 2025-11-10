@@ -35,6 +35,12 @@ export const routes: Routes = [
               ),
             title: 'Novo Cliente',
           },
+          {
+            path: 'editar/:id',
+            loadComponent: () =>
+              import('src/app/pages/edition/edition.component').then((m) => m.EditionComponent),
+            title: 'Editar Cliente',
+          },
         ],
       },
     ],
