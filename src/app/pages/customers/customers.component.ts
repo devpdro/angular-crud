@@ -20,6 +20,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { ToastModule } from 'primeng/toast';
 import { MessageModule } from 'primeng/message';
 import { HomeService } from 'src/app/pages/customers/customers.service';
+import { LocalStoreService } from 'src/app/LocalStoreService/local-store.service';
 
 interface filtros {
   name: string;
@@ -65,14 +66,20 @@ export class HomeComponent implements OnInit {
   saving: boolean = false;
   lastLazyEvent: any = null;
 
+  permissaoAlterar: boolean = true;
+  permissaoInserir: boolean = true;
+  permissaoExcluir: boolean = true;
+
   constructor(
     private homeService: HomeService,
     private fb: FormBuilder,
     private confirmationService: ConfirmationService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private ls: LocalStoreService
   ) {}
 
   ngOnInit(): void {
+    this.permissoes();
     this.filtros = [
       { name: 'Nome', code: 'nome' },
       { name: 'Cpf', code: 'cpf' },
@@ -107,7 +114,6 @@ export class HomeComponent implements OnInit {
     }
     return value ?? '';
   }
-
 
   loadItens($event: any) {
     this.lastLazyEvent = $event;
@@ -206,5 +212,24 @@ export class HomeComponent implements OnInit {
         return error;
       },
     });
+  }
+                                                                                                         
+  permissoes() {
+    let permissao = this.ls.getPermissaoBotao('clientes', 'alterar');
+    if (!permissao) {
+      this.permissaoAlterar = false;
+    }
+    permissao = this.ls.getPermissaoBotao('clientes', 'inserir');
+    if (!permissao) {
+      this.permissaoInserir = false;
+    }
+    permissao = this.ls.getPermissaoBotao('clientes', 'excluir');
+    if (!permissao) {
+      this.permissaoExcluir = false;
+    }
+  }
+
+  can(botao: 'inserir' | 'alterar' | 'excluir'): boolean {
+    return this.ls.getPermissaoBotao('clientes', botao);
   }
 }

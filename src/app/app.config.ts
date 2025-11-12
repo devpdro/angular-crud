@@ -1,5 +1,5 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
-import { provideHttpClient, withFetch } from '@angular/common/http';
+import { provideHttpClient, withFetch, withInterceptorsFromDi } from '@angular/common/http';
 import { withXsrfConfiguration } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 import { provideClientHydration } from '@angular/platform-browser';
@@ -20,6 +20,7 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(),
     provideHttpClient(
       withFetch(),
+      withInterceptorsFromDi(),
       withXsrfConfiguration({ cookieName: 'XSRF-TOKEN', headerName: 'X-XSRF-TOKEN' })
     ),
     provideNgxMask(),

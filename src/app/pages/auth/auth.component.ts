@@ -43,19 +43,19 @@ export class AuthComponent {
     if (this.LoginForm.invalid) return;
 
     const payload = this.LoginForm.value;
-    console.log('Payload:', payload);
     this.auth.login(payload).subscribe({
       next: (res) => {
         const token = res?.token ?? res?.access_token;
         const abilities = res?.abilities ?? [];
+        const access_level = res?.access_level ?? 0;
+        console.log(access_level);
         console.log('Login bem-sucedido!', res);
         if (token) {
           localStorage.setItem('token', token);
-          console.log('Token:', token);
           localStorage.setItem('abilities', JSON.stringify(abilities));
-          console.log(localStorage.getItem('token'));
-        } else {
-          console.log('Sessão autenticada via cookie (Sanctum).');
+          console.log(localStorage.getItem('token'), abilities);
+          localStorage.setItem('access_level', access_level.toString());
+          console.log(localStorage.getItem('access_level'));
         }
         this.router.navigate(['/menu']);
       },

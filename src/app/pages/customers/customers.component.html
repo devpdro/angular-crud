@@ -142,6 +142,7 @@
             icon="pi pi-trash"
             class="inline-flex items-center justify-center w-8 h-8 rounded-[6px] text-[#EF4444] text-[9px] border border-[#EF4444] bg-transparent hover:bg-[#FFF1F2] shadow-[0_4px_10px_rgba(0,0,0,0.06)] ml-2"
             aria-label="Excluir"
+            *ngIf="permissaoExcluir"
             (click)="messageConfirmDelete(item)"
           ></a>
         </td>

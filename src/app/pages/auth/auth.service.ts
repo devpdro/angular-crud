@@ -7,7 +7,6 @@ interface User {
   email: string;
   password: string | number;
   password_confirmation: string | number;
-  token?: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -16,13 +15,8 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  getCsrfCookie(): Observable<any> {
-    return this.http.get(`/sanctum/csrf-cookie`, { withCredentials: true });
-  }
-
   register(userData: User): Observable<any> {
     return this.http.post(`${this.apiUrl}/register`, userData, {
-      withCredentials: true,
       headers: new HttpHeaders({
         Accept: 'application/json',
       }),
@@ -31,7 +25,6 @@ export class AuthService {
 
   login(loginData: User): Observable<any> {
     return this.http.post(`${this.apiUrl}/login`, loginData, {
-      withCredentials: true,
       headers: new HttpHeaders({
         Accept: 'application/json',
       }),
@@ -39,10 +32,22 @@ export class AuthService {
   }
 
   logout(): Observable<any> {
-    return this.http.post(`${this.apiUrl}/logout`, {}, { withCredentials: true });
+    return this.http.post(
+      `${this.apiUrl}/logout`,
+      {},
+      {
+        headers: new HttpHeaders({
+          Accept: 'application/json',
+        }),
+      }
+    );
   }
 
   getUser(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/user`, { withCredentials: true });
+    return this.http.get(`${this.apiUrl}/user`, {
+      headers: new HttpHeaders({
+        Accept: 'application/json',
+      }),
+    });
   }
 }

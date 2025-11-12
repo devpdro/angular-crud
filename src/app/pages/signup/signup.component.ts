@@ -60,22 +60,14 @@ export class SignupComponent {
     if (this.SignupForm.invalid) return;
 
     const payload = this.SignupForm.value;
-    this.auth.getCsrfCookie().subscribe({
+    this.auth.register(payload).subscribe({
       next: () => {
-        this.auth.register(payload).subscribe({
-          next: () => {
-            this.router.navigate(['/']);
-            console.log('Registro bem-sucedido!', payload);
-          },
-          error: (err) => {
-            const msg = err?.error?.message || 'Erro ao registrar. Tente novamente.';
-            this.error = typeof msg === 'string' ? msg : 'Erro ao registrar. Tente novamente.';
-          },
-        });
+        this.router.navigate(['/']);
+        console.log('Registro bem-sucedido!', payload);
       },
       error: (err) => {
-        const msg = err?.error?.message || 'Erro de segurança (CSRF). Tente novamente.';
-        this.error = typeof msg === 'string' ? msg : 'Erro de segurança (CSRF). Tente novamente.';
+        const msg = err?.error?.message || 'Erro ao registrar. Tente novamente.';
+        this.error = typeof msg === 'string' ? msg : 'Erro ao registrar. Tente novamente.';
       },
     });
   }

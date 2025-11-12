@@ -9,7 +9,7 @@ export const routes: Routes = [
     title: 'Login',
   },
   {
-    path: 'signup',
+    path: 'register',
     loadComponent: () =>
       import('src/app/pages/signup/signup.component').then((m) => m.SignupComponent),
     title: 'Cadastro',
