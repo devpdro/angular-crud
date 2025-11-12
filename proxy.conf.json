@@ -3,6 +3,14 @@
     "target": "http://pessoal.local",
     "secure": false,
     "changeOrigin": true,
-    "logLevel": "debug"
+    "logLevel": "debug",
+    "cookieDomainRewrite": "localhost"
+  },
+  "/sanctum": {
+    "target": "http://pessoal.local",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug",
+    "cookieDomainRewrite": "localhost"
   }
 }

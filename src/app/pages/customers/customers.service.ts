@@ -27,7 +27,8 @@ export class HomeService {
     content: any
   ): Observable<Client[]> {
     return this.http.get<Client[]>(
-      `${this.apiUrl}?page=${page}&limit=${limit}&orderby=${orderby}&direction=${direction}&filterby=${filterby}&content=${content}`
+      `${this.apiUrl}?page=${page}&limit=${limit}&orderby=${orderby}&direction=${direction}&filterby=${filterby}&content=${content}`,
+      { withCredentials: true }
     );
   }
 

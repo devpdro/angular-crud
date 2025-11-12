@@ -1,0 +1,173 @@
+<div class="min-h-screen flex items-center justify-center bg-[#F3F4F6] p-4">
+  <div class="w-full max-w-sm bg-white border-2 border-[#E5E7EB] rounded-xl shadow-sm p-5">
+    <h1 class="text-[#111827] text-[14px] font-semibold mb-4">Crie sua conta</h1>
+
+    <p-message
+      *ngIf="error"
+      severity="error"
+      variant="simple"
+      size="small"
+      class="!mt-0 !mb-2"
+      [text]="error"
+    ></p-message>
+
+    <form [formGroup]="SignupForm" class="space-y-3" autocomplete="off" (ngSubmit)="onSubmit()">
+      <div class="flex flex-col gap-1">
+        <label for="name" class="text-[#374151] text-[11px] font-medium">Nome</label>
+        <input
+          pInputText
+          id="name"
+          type="text"
+          autocomplete="off"
+          formControlName="name"
+          class="w-full h-9 px-3 rounded-[8px] text-[11px] leading-[15px] text-[#111827] border transition-shadow focus:outline-none"
+          [ngClass]="{
+            'border-[#EF4444] focus:border-[#EF4444] ring-2 ring-[#FCA5A5]':
+              SignupForm.controls['name'].invalid && SignupForm.controls['name'].touched,
+            'border-[#10B981] focus:border-[#10B981] ring-2 ring-[#A7F3D0]':
+              SignupForm.controls['name'].valid && SignupForm.controls['name'].touched,
+            'border-[#E6E9EE] focus:border-[#F79E0B] focus:ring-2 focus:ring-[#F79E0B]':
+              !SignupForm.controls['name'].touched
+          }"
+        />
+      </div>
+      <p-message
+        *ngIf="
+          SignupForm.controls['name'].hasError('required') && SignupForm.controls['name'].touched
+        "
+        severity="error"
+        variant="simple"
+        size="small"
+        class="!mt-1 !p-0 !m-0 !bg-transparent !border-0 !text-[11px] !text-[#EF4444]"
+        >Nome é obrigatório</p-message
+      >
+
+      <div class="flex flex-col gap-1">
+        <label for="email" class="text-[#374151] text-[11px] font-medium">E-mail</label>
+        <input
+          pInputText
+          id="email"
+          type="email"
+          autocomplete="off"
+          formControlName="email"
+          class="w-full h-9 px-3 rounded-[8px] text-[11px] leading-[15px] text-[#111827] border transition-shadow focus:outline-none"
+          [ngClass]="{
+            'border-[#EF4444] focus:border-[#EF4444] ring-2 ring-[#FCA5A5]':
+              SignupForm.controls['email'].invalid && SignupForm.controls['email'].touched,
+            'border-[#10B981] focus:border-[#10B981] ring-2 ring-[#A7F3D0]':
+              SignupForm.controls['email'].valid && SignupForm.controls['email'].touched,
+            'border-[#E6E9EE] focus:border-[#F79E0B] focus:ring-2 focus:ring-[#F79E0B]':
+              !SignupForm.controls['email'].touched
+          }"
+        />
+      </div>
+      <p-message
+        *ngIf="
+          (SignupForm.controls['email'].hasError('required') ||
+            SignupForm.controls['email'].hasError('email')) &&
+          SignupForm.controls['email'].touched
+        "
+        severity="error"
+        variant="simple"
+        size="small"
+        class="!mt-1 !p-0 !m-0 !bg-transparent !border-0 !text-[11px] !text-[#EF4444]"
+        >E-mail inválido</p-message
+      >
+
+      <div class="flex flex-col gap-1">
+        <label for="password" class="text-[#374151] text-[11px] font-medium">Senha</label>
+        <input
+          pInputText
+          id="password"
+          type="password"
+          autocomplete="off"
+          formControlName="password"
+          class="w-full h-9 px-3 rounded-[8px] text-[11px] leading-[15px] text-[#111827] border transition-shadow focus:outline-none"
+          [ngClass]="{
+            'border-[#EF4444] focus:border-[#EF4444] ring-2 ring-[#FCA5A5]':
+              SignupForm.controls['password'].invalid && SignupForm.controls['password'].touched,
+            'border-[#10B981] focus:border-[#10B981] ring-2 ring-[#A7F3D0]':
+              SignupForm.controls['password'].valid && SignupForm.controls['password'].touched,
+            'border-[#E6E9EE] focus:border-[#F79E0B] focus:ring-2 focus:ring-[#F79E0B]':
+              !SignupForm.controls['password'].touched
+          }"
+        />
+      </div>
+      <p-message
+        *ngIf="
+          SignupForm.controls['password'].hasError('required') &&
+          SignupForm.controls['password'].touched
+        "
+        severity="error"
+        variant="simple"
+        size="small"
+        class="!mt-1 !p-0 !m-0 !bg-transparent !border-0 !text-[11px] !text-[#EF4444]"
+        >Senha é obrigatória</p-message
+      >
+      <p-message
+        *ngIf="
+          SignupForm.controls['password'].hasError('minlength') &&
+          SignupForm.controls['password'].touched
+        "
+        severity="error"
+        variant="simple"
+        size="small"
+        class="!mt-1 !p-0 !m-0 !bg-transparent !border-0 !text-[11px] !text-[#EF4444]"
+        >Mínimo de 4 caracteres</p-message
+      >
+
+      <div class="flex flex-col gap-1">
+        <label for="confirmPassword" class="text-[#374151] text-[11px] font-medium"
+          >Confirmar Senha</label
+        >
+        <input
+          pInputText
+          id="confirmPassword"
+          type="password"
+          autocomplete="off"
+          formControlName="password_confirmation"
+          class="w-full h-9 px-3 rounded-[8px] text-[11px] leading-[15px] text-[#111827] border transition-shadow focus:outline-none"
+          [ngClass]="{
+            'border-[#EF4444] focus:border-[#EF4444] ring-2 ring-[#FCA5A5]':
+              (SignupForm.hasError('passwordsMismatch') ||
+                SignupForm.controls['password_confirmation'].invalid) &&
+              SignupForm.controls['password_confirmation'].touched,
+            'border-[#10B981] focus:border-[#10B981] ring-2 ring-[#A7F3D0]':
+              !SignupForm.hasError('passwordsMismatch') &&
+              SignupForm.controls['password_confirmation'].valid &&
+              SignupForm.controls['password_confirmation'].touched,
+            'border-[#E6E9EE] focus:border-[#F79E0B] focus:ring-2 focus:ring-[#F79E0B]':
+              !SignupForm.controls['password_confirmation'].touched
+          }"
+        />
+      </div>
+      <p-message
+        *ngIf="
+          SignupForm.controls['password_confirmation'].hasError('required') &&
+          SignupForm.controls['password_confirmation'].touched
+        "
+        severity="error"
+        variant="simple"
+        size="small"
+        class="!mt-1 !p-0 !m-0 !bg-transparent !border-0 !text-[11px] !text-[#EF4444]"
+        >Confirmação é obrigatória</p-message
+      >
+      <p-message
+        *ngIf="
+          SignupForm.hasError('passwordsMismatch') &&
+          SignupForm.controls['password_confirmation'].touched
+        "
+        severity="error"
+        variant="simple"
+        size="small"
+        class="!mt-1 !p-0 !m-0 !bg-transparent !border-0 !text-[11px] !text-[#EF4444]"
+        >Senhas não coincidem</p-message
+      >
+
+      <div class="flex justify-between items-center mt-3">
+        <a routerLink="/" class="text-[11px] text-[#374151] underline">Já tem conta? Faça login</a>
+        <p-button label="Registrar" type="submit" [disabled]="SignupForm.invalid"></p-button>
+      </div>
+    </form>
+  </div>
+</div>

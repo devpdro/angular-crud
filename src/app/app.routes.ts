@@ -9,6 +9,12 @@ export const routes: Routes = [
     title: 'Login',
   },
   {
+    path: 'signup',
+    loadComponent: () =>
+      import('src/app/pages/signup/signup.component').then((m) => m.SignupComponent),
+    title: 'Cadastro',
+  },
+  {
     path: 'menu',
     loadComponent: () => import('src/app/pages/menu/menu.component').then((m) => m.MenuComponent),
     title: 'Dashboard',
