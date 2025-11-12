@@ -48,6 +48,7 @@ export class AuthComponent {
         const token = res?.token ?? res?.access_token;
         const abilities = res?.abilities ?? [];
         const access_level = res?.access_level ?? 0;
+        const userId = res?.user?.id ?? res?.id;
         console.log(access_level);
         console.log('Login bem-sucedido!', res);
         if (token) {
@@ -56,7 +57,10 @@ export class AuthComponent {
           console.log(localStorage.getItem('token'), abilities);
           localStorage.setItem('access_level', access_level.toString());
           console.log(localStorage.getItem('access_level'));
+          localStorage.setItem('user_id', userId.toString());
+          console.log(localStorage.getItem('user_id'));
         }
+
         this.router.navigate(['/menu']);
       },
       error: (err) => {

@@ -54,6 +54,7 @@
         icon="pi pi-plus"
         class="h-8 px-3 rounded-[6px] text-white text-[11px] leading-[15px] font-medium shadow-[0_6px_18px_rgba(17,24,39,0.06)] transition-colors inline-flex items-center justify-center gap-2"
         aria-label="Adicionar"
+        *ngIf="permissaoInserir"
         routerLink="/menu/clientes/novo"
       ></a>
     </div>
@@ -135,6 +136,7 @@
             icon="pi pi-pencil"
             class="inline-flex items-center justify-center w-8 h-8 rounded-[6px] text-[#EF4444] text-[9px] border border-[#EF4444] bg-transparent hover:bg-[#FFF1F2] shadow-[0_4px_10px_rgba(0,0,0,0.06)]"
             aria-label="Editar"
+            *ngIf="permissaoAlterar"
             [routerLink]="['/menu/clientes/editar', item.id]"
           ></a>
           <a
