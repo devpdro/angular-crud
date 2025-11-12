@@ -213,13 +213,13 @@ export class HomeComponent implements OnInit {
       },
     });
   }
-                                                                                                         
+
   permissoes() {
-    let permissao = this.ls.getPermissaoBotao('clientes', 'alterar');
+    let permissao = this.ls.getPermissaoBotao('clientes', 'editar');
     if (!permissao) {
       this.permissaoAlterar = false;
     }
-    permissao = this.ls.getPermissaoBotao('clientes', 'inserir');
+    permissao = this.ls.getPermissaoBotao('clientes', 'criar');
     if (!permissao) {
       this.permissaoInserir = false;
     }
@@ -229,7 +229,7 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  can(botao: 'inserir' | 'alterar' | 'excluir'): boolean {
+  can(botao: 'criar' | 'alterar' | 'excluir'): boolean {
     return this.ls.getPermissaoBotao('clientes', botao);
   }
 }

@@ -46,19 +46,13 @@ export class AuthComponent {
     this.auth.login(payload).subscribe({
       next: (res) => {
         const token = res?.token ?? res?.access_token;
-        const abilities = res?.abilities ?? [];
+        const permissoes = res?.permissoes ?? [];
         const access_level = res?.access_level ?? 0;
         const userId = res?.user?.id ?? res?.id;
-        console.log(access_level);
-        console.log('Login bem-sucedido!', res);
         if (token) {
           localStorage.setItem('token', token);
-          localStorage.setItem('abilities', JSON.stringify(abilities));
-          console.log(localStorage.getItem('token'), abilities);
-          localStorage.setItem('access_level', access_level.toString());
-          console.log(localStorage.getItem('access_level'));
+          localStorage.setItem('permissoes', JSON.stringify(permissoes));
           localStorage.setItem('user_id', userId.toString());
-          console.log(localStorage.getItem('user_id'));
         }
 
         this.router.navigate(['/menu']);
